@@ -54,3 +54,21 @@ AH attempted calling this on 2019-01-03 (band not confident enough, got 1 part d
 
 
 --------------------
+
+## Bristol Royal
+
+23456  W   H
+45236  -   -
+23456  -   -
+
+So a two-part. Wrong part is 9 leads, home part is 7 (so 16 total, x2 = 32 leads = 32 * 40 = 1280).
+
+Every obs bell (6 and above) does same thing both parts: they miss their own place bell (the W), and then they miss the PB before theirs (the H).
+Example: the 6 misses out 6 then 4th pb in both halfs.
+
+Reminder: calling positions are where the tenor *ends up* after the call (and not where it *would be* if the call didn't happen).
+Example: Home is 10th pb. In Bristol10 at a bob, you get to 10 by skipping 8ths pb, i.e. you were at the end of 6ths pb lead and would have become 8th pb. Similarly, home is 9th pb, so you skip 10 to get to it, so call is at end of 8th pb.
+
+
+
+
