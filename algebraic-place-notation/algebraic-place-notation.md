@@ -1,8 +1,12 @@
 # Algebraic Place Notation
 
-APN is used to generate place notation, and hence method designs, in such a way that a method can be generated for any valid stage.
+APN is used to generate place notation, and hence method designs, in such a way that a method with a general structure can be generated for any valid stage.
 
 It is based on overlaying repeated place patterns to build up place notation for a method.
+
+APN also allows you to focus on how methods are constructed by defining a method as being something else plus some embelishments.
+
+For example, in APN you can specify plain bob as being plain hunt plus a 12 lead end.
 
 # How to write places
 
@@ -96,7 +100,7 @@ To do this, our APN script is as follows::
 
 The ```pn[8]="12"``` line is saying "make the eighth piece of place notation be 12". This overrides the automatically generated place notation in that position taken from the ```base``` and ```length``` parts previously.
 
-Here's a demonstration of how the ```pn[...]``` numbering applies to our Plain Bob Minor place notation:
+Here's a demonstration of how the ```pn[...]``` numbering applies to our Plain Bob Minimus place notation:
 
 ```
     Plain Bob Minimus (one lead)
