@@ -128,6 +128,36 @@ The ```name```, ```info``` and ```author``` tags are for self-explanatory stuff:
 	author="Alex"
 ```
 
+The metadata item ```id``` is special. It must be unique - so no two methods have the same ```id```. Its use is for defining methods in terms of other methods.
+
+For example, if plain hunt is defined as follows (note the the id definition):
+
+```
+	id="plainhunt"
+	base="x.1n"
+	length="2*n"
+```
+
+Then we can define Plain Bob as follows:
+
+```
+	id="plainbob"
+	base="id:plainhunt"
+	pn[-1]="12|12n"
+```
+
+So we have defined Plain Bob as being plain hunt plus a different bit of place notation at the lead-end.
+
+Because the term ```pn[-1]``` is so useful, there's a shorthand for it: ```leadend```.
+
+So Plain Bob could also be defined as:
+
+```
+	id="plainbob"
+	base="id:plainhunt"
+	leadend="12|12n"
+```
+
 ## Stage info
 
 Although APN is meant to describe methods in a general multi-stage way, sometimes there are limitations to a method, such as it being even or odd bell only, or only working on certain specific range of stages.
@@ -166,6 +196,110 @@ This is the 'grid' or basis for surprise methods:
 
 # Further APN examples
 
+## Reverse Bob
+
+```
+	id="reverse_bob"
+	minimumstage=4
+	base="id:plain_hunt"
+	halflead="[-1]n|1[-1]n"
+```
+
+The last line is similar to the ```leadend``` shorthand: it stands for ```pn[n]```.
+
+The ```[-1]n|1[-1]n``` is using the usual odd-and-even versions of the place notation format. 
+
+Let's taken the latter part of that (for odd stages): ```1[-1]n```. The ```[-1]``` part demonstrates how to refer to places counted from
+the end of the change: it's just shorthand for ```n-1```. So on 6 bells, the whole ```1[-1]n``` part would translate
+into ```156```. On 8 bells, it would translate into ```178```.
+
+And another way to define Reverse Bob, using a function:
+
+```
+	id="reverse_bob"
+	minimumstage=4
+	base="id:plain_hunt"
+	applyfunc="reverse"
+```
+
+The ```applyfunc``` applies a function to the calculated place notation: it shifts the PN a half-lead, then mirrors the positions.
+
+Example:
+
+The place notation for PB4:
+
+```
+1234
+2143  x
+2413  14
+4231  x
+4321  14
+3412  x
+3142  14
+1324  x
+1342  12
+```
+
+So the PN shifted a half lead is:
+
+```
+x
+14
+x
+12
+x
+14
+x
+14
+```
+
+And then we reverse the positions of that:
+
+```
+x     # x when reversed (on an even stage) is just x
+14    # 14 when reversed (on stage 4) is 14 again
+x
+34    # 12 when rever2sed (on stage 4) is 34
+x
+14
+x
+14
+```
+
+And that is PN for reverse bob.
+
+## Double Bob
+
+There's a few ways you could define Double Bob.
+
+Defined as changes to plain hunt:
+
+```
+	id="double_bob"
+	minimumstage=4
+	base="id:plain_hunt"
+	# AH: halflead would be nice as "~12|~12n" - the ~ means reverse positions places
+	halflead="[-1]n|1[-1]n"
+	leadend="12|12n"	
+```
+
+The ```halflead``` is a shorthand similar to ```leadend```: it's a stand-in for ```pn[n]```.
+
+The ```[-1]``` demonstrates how to refer to places counted from the end of the change: it's just shorthand for n-1.
+
+Examples: on 6 bells, ```[-1]n``` is translated into ```56```. On 8 bells, ```[-3]n``` is translated into ```58```.
+
+Here's Double Bob defined as changes to Plain Bob:
+
+```
+	id="double_bob"
+	minimumstage=4
+	base="id:pain_bob"
+	halflead="[-1]n|1[-1]n"
+	leadend="12|12n"
+```
+
+
 ## Grandsire
 
 ```
@@ -201,8 +335,40 @@ Just for hoots; the nearest thing structurally to Little Bob on odd numbers:
 	pn[-1]="127"
 ```
 
-I use the word 'pesudo' because this method has a different structure to Little Bob - it's a two-part differential, with half of the bells doing only the 'quick' work (dodges in 3-4, no 2nds), and half doing only the 'slow' work (no dodge in 3-4, make 2nds over treble). Every working bell makes 4 blows when lying (and no dodging at the back).
+I use the word 'pseudo' because this method has a different structure to Little Bob - it's a two-part differential, with half of the bells doing only the 'quick' work (dodges in 3-4, no 2nds), and half doing only the 'slow' work (no dodge in 3-4, make 2nds over treble). Every working bell makes 4 blows when lying (and no dodging at the back).
 
+## m-Bob
+
+m-Bob is the generalisation of Plain Bob and Grandsire: it is the method with m hunt bells. What we call Plain Bob would be known as 1-Bob, and Grandsire would be 2-Bob. If you rang Plain Bob and called a Bob at every lead, that would be the same as 3-Bob (since at a Bob in PB, three bells end up plain hunting at the lead end).
+
+It's an example of APN where we need to take a parameter.
+
+Here's the definition of m-Bob when m is an even number:
+
+```
+	id="even_m_bob"
+	params="m"
+	base="x.1n|n.1"
+	length="2*n"
+	leadend="1m|1mn"
+```
+
+Here's the definition of m-Bob when m is an odd number:
+
+```
+	id="odd_m_bob"
+	params="m"
+	base="x.1n|n.1"
+	length="2*n"
+	p[1]="mn|m"
+```
+
+Then we can tie the two together in one definition using the ```|``` operator:
+
+```
+	id="m_bob"
+	base="id:even_n_bob|id:odd_n_bob"
+```
 
 # Hints on working out the APN for a method
 
