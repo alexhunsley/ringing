@@ -1,10 +1,14 @@
 from lark import Lark
 
-l = Lark('''start: WORD "," WORD "!"
+l = Lark('''pn: pn pn    
+			  | REVERSE_PN pn
+	          | HEXDIGIT
+	          | "[" NUMBER "]"
+	        REVERSE_PN: "~"
+	        
+	        %import common.HEXDIGIT
+	        %import common.NUMBER
+         ''', start='pn')
 
-            %import common.WORD   // imports from terminal library
-            %ignore " "           // Disregard spaces in text
-         ''')
-
-print( l.parse("Hello, World!") )
-
+print( l.parse("1458[10]") )
+print( l.parse("~12") )
