@@ -1,14 +1,17 @@
 from lark import Lark
 
-l = Lark('''pn: pn pn    
-			  | REVERSE_PN pn
-	          | HEXDIGIT
-	          | "[" NUMBER "]"
+l = Lark('''pnlist: pn* 
+                  | REVERSE_PN pn*
+
+            pn: HEXDIGIT
+	          | "[" SIGNED_INT "]"
+
 	        REVERSE_PN: "~"
 	        
 	        %import common.HEXDIGIT
-	        %import common.NUMBER
-         ''', start='pn')
+	        %import common.SIGNED_INT
+         ''', start='pnlist')
 
-print( l.parse("1458[10]") )
-print( l.parse("~12") )
+print( l.parse("1458[-10]").pretty() )
+print( l.parse("~12").pretty() )
+print( l.parse("1234").pretty() )
