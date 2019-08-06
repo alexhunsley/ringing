@@ -1,22 +1,22 @@
-# Algebraic Place Notation
+# Generic Place Notation
 
-APN is used to generate place notation, and hence method designs, in such a way that a method with a general structure can be generated for any valid stage.
+GPN is a nontation used to generate standard place notation, and hence method designs, in such a way that a method with a general structure can be generated for any valid stage.
 
 It is based on overlaying repeated place patterns to build up place notation for a method.
 
-APN also allows you to focus on how methods are constructed by defining a method as being something else plus some embelishments.
+GPN also allows you to focus on how methods are constructed by defining a method as being something else plus some embellishments.
 
-For example, in APN you can specify plain bob as being plain hunt plus a 12 lead end.
+For example, in GPN you can specify plain bob as being plain hunt plus a 12 lead end.
 
 # How to write places
 
-In APN you write down places in much the same way as place notation, with a few additions.
+In GPN you write down places in much the same way as place notation, with a few additions.
 
 You are allowed to write ```n``` as place - it represents the final place in a row at the current stage. So on minor, ```n``` means 6.
 
-Being able to generate methods at any stage is key to APN, so being able to have place notation that goes to any conceivable number of bells is necessary.
+Being able to generate methods at any stage is key to GPN, so being able to have place notation that goes to any conceivable number of bells is necessary.
 
-APN allows a few options here:
+GPN allows a few options here:
 
 If you don't care about methods above stage 36, the places can notated as single characters in the standard way like this:
 
@@ -42,17 +42,18 @@ And finally, for handling any numbered bell at all without limit, the notation `
 123456789[10][11][12][13][14]...
 ```
 
-This final bit of notation using ```[x]``` allows us a trick: we can write down 'negative' places, like this:
+This ```[x]``` notation allows us to do a trick: we can write down 'negative' places, like this:
 
 ```
 [-1]   this is the place at the end of the row (i.e. on minor, this equals 6)
 [-2]   this is the place one from the end of the row (i.e. on minor, this equals 5)
 [-3]   this is the place two from the end of the row (i.e. on minor, this equals 4)
+[-n]   this will always be the same as 1, on any stage
 ```
 
-This is useful for the genericness of APN; for example, the halflead of reverse or double bob an even stage is always going to be ```[-1][-2]```. For the odd stages, it would be ```1[-2][-1]```.
+This is useful for the genericness of GPN; for example, the halflead of reverse or double bob an even stage is always going to be ```[-1][-2]```. For the odd stages, it would be ```1[-2][-1]```.
 
-There's a handy alternative to writing something like ```[-1][-2]```: if you prepend the notation with ```~```, all the places are mirrored. So ```~12``` is the same as ```[-1][-2][n]```.
+There's a handy, less verbose alternative to writing something like ```[-1][-2]```: if you prepend the notation with ```~```, all the places are mirrored. So ```~12n``` is the same as ```[-1][-2][-n]```.
 
 
 # Example: Plain Hunt
@@ -62,9 +63,9 @@ Standard PN on 6 bells is: ```x.16.x.16.x.16.x.16.x.16.x.16```
 
 So the pattern we're seeing is "keep repeating the place notation pattern ```x.1n``` until we have ```2*n``` bits of place notation", with n being the stage.
 
-In APN we write this as a 'script' that looks like this[^1]:
+In GPN we write this as a 'script' that looks like this[^1]:
 
-[^1]: If this script is run through an APN tool, it can produce the PN for any (even) stage we want
+[^1]: If this script is run through an GPN tool, it can produce the PN for any (even) stage we want
 
 ```
 	base="x.1n"
@@ -79,7 +80,7 @@ PN on 7 bells is: ```7.1.7.1.7.1.7.1.7.1.7.1.7.1.```
 
 ... the pattern is "keep repeating the place notation pattern ```n.1``` until we have ```2*n``` bits of place notation" (again, n is the stage).
 
-In APN we would write this as:
+In GPN we would write this as:
 
 ```
 	base="n.1"
@@ -90,7 +91,7 @@ In APN we would write this as:
 
 Plain Bob is the same as plain hunt, except that we change the last piece of place notation to ```12``` (on even bells).
 
-To do this, our APN script is as follows::
+To do this, our GPN script is as follows::
 
 ```
 	base="x.1n"
@@ -116,7 +117,7 @@ Here's a demonstration of how the ```pn[...]``` numbering applies to our Plain B
 
 ```
 
-There's a problem with this APN though: APN is supposed to generate a method design on any number of bells, but the script given only works on 4 bells, due to the 8 in ```pn[8]="12"```.
+There's a problem with this GPN though: GPN is supposed to generate a method design on any number of bells, but the script given only works on 4 bells, due to the 8 in ```pn[8]="12"```.
 
 To fix this, we can rewrite that line as:
 
@@ -144,7 +145,7 @@ There's an even easier way though: we can use negative numbers to signal we are 
 
 So we can specify that troublesome line as ```pn[-1]="12"```. 
 
-And so now this APN correctly generates Plain Bob on any stage of bells:
+And so now this GPN correctly generates Plain Bob on any stage of bells:
 
 ```
 	base="x.1n"
@@ -166,7 +167,7 @@ To illustrate, here's the script that generates Plain Bob for both even and odd 
 
 Finally, note the use of ```#``` in this script - any lines beginning with this character are 'comments' for human consumption only.
 
-# Metadata in APN
+# Metadata in GPN
 
 The ```name```, ```info``` and ```author``` tags are for self-explanatory stuff:
 
@@ -208,9 +209,9 @@ So Plain Bob could also be defined as:
 
 ## Stage info
 
-Although APN is meant to describe methods in a general multi-stage way, sometimes there are limitations to a method, such as it being even or odd bell only, or only working on certain specific range of stages.
+Although GPN is meant to describe methods in a general multi-stage way, sometimes there are limitations to a method, such as it being even or odd bell only, or only working on certain specific range of stages.
 
-Such limitations can be put into the APN script; see the following examples:
+Such limitations can be put into the GPN script; see the following examples:
 
 ```
 	# this method is ony valid on odd stages
@@ -242,7 +243,7 @@ This is the 'grid' or basis for surprise methods:
 ```
 
 
-# Further APN examples
+# Further GPN examples
 
 ## Reverse Bob
 
@@ -386,9 +387,9 @@ I use the word 'pseudo' because this method has a different structure to Little 
 
 ## m-Bob
 
-m-Bob is the generalisation of Plain Bob and Grandsire: it is the method with m hunt bells. What we call Plain Bob would be known as 1-Bob, and Grandsire would be 2-Bob. If you rang Plain Bob and called a Bob at every lead, that would be the same as 3-Bob (since at a Bob in PB, three bells end up plain hunting at the lead end).
+m-Bob is the generalisation of Plain Bob and Grandsire: it is the method with ```m``` hunt bells. What we call Plain Bob is 1-Bob, and Grandsire is 2-Bob. And if you ring Plain Bob and called a Bob at every lead, that would be the same as 3-Bob without calls in it (since at a Bob in PB, three bells end up plain hunting at the lead end).
 
-m-Bob is an example of APN where we need to take a parameter: the 'm'.
+m-Bob is an example of GPN where we need to take a parameter: the number of hunt bells ```m```.
 
 Here's the definition of m-Bob when m is an even number:
 
@@ -419,7 +420,7 @@ Then we can tie the two together in one definition using the ```|``` operator:
 	base="id:even_n_bob|id:odd_n_bob"
 ```
 
-# Hints on working out the APN for a method
+# Hints on working out the GPN for a method
 
 Concentrate on the places, not on dodges, in much the same way as place notation; once the places are nailed down, the correct dodging, points etc just happens.
 
