@@ -1,38 +1,10 @@
-from parglare import Parser, Grammar
+from lark import Lark
 
-grammar = r"""
-E: E '+' E  {left, 1}
- | E '-' E  {left, 1}
- | E '*' E  {left, 2}
- | E '/' E  {left, 2}
- | E '^' E  {right, 3}
- | '(' E ')'
- | number;
+l = Lark('''start: WORD "," WORD "!"
 
-terminals
-number: /\d+(\.\d+)?/;
-"""
+            %import common.WORD   // imports from terminal library
+            %ignore " "           // Disregard spaces in text
+         ''')
 
-actions = {
-    "E": [lambda _, nodes: nodes[0] + nodes[2],
-          lambda _, nodes: nodes[0] - nodes[2],
-          lambda _, nodes: nodes[0] * nodes[2],
-          lambda _, nodes: nodes[0] / nodes[2],
-          lambda _, nodes: nodes[0] ** nodes[2],
-          lambda _, nodes: nodes[1],
-          lambda _, nodes: nodes[0]],
-    "number": lambda _, value: float(value),
-}
+print( l.parse("Hello, World!") )
 
-g = Grammar.from_string(grammar)
-parser = Parser(g, debug=True, actions=actions)
-
-result = parser.parse("34 + 4.6 / 2 * 4^2^2 + 78")
-
-print("Result = ", result)
-
-# Output
-# -- Debugging/tracing output with detailed info about grammar, productions,
-# -- terminals and nonterminals, DFA states, parsing progress,
-# -- and at the end of the output:
-# Result = 700.8
