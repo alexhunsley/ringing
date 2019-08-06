@@ -4,6 +4,53 @@ APN is used to generate place notation, and hence method designs, in such a way 
 
 It is based on overlaying repeated place patterns to build up place notation for a method.
 
+# How to write places
+
+In APN you write down places in much the same way as place notation, with a few additions.
+
+You are allowed to write ```n``` as place - it represents the final place in a row at the current stage. So on minor, ```n``` means 6.
+
+Being able to generate methods at any stage is key to APN, so being able to have place notation that goes to any conceivable number of bells is necessary.
+
+APN allows a few options here:
+
+If you don't care about methods above stage 36, the places can notated as single characters in the standard way like this:
+
+```
+1234567890ETABCDFGHIJKLMNOPQRSUVWXYZ
+           ^   ^
+          12   16 
+```
+
+If you want to ditch the ```E``` and ```T``` convention for eleven and twelve, you can go for the more straight-forward[^3]:
+
+```
+1234567890ABCDEFGHIJKLMNOPQRSTUVWXYZ
+           ^   ^
+          12   16 
+```
+
+[^3]: On stages up to 16, this is the _hexadecimal_ number system
+
+And finally, for handling any numbered bell at all without limit, the notation ```[x]``` can be used:
+
+```
+123456789[10][11][12][13][14]...
+```
+
+This final bit of notation using ```[x]``` allows us a trick: we can write down 'negative' places, like this:
+
+```
+[-1]   this is the place at the end of the row (i.e. on minor, this equals 6)
+[-2]   this is the place one from the end of the row (i.e. on minor, this equals 5)
+[-3]   this is the place two from the end of the row (i.e. on minor, this equals 4)
+```
+
+This is useful for the genericness of APN; for example, the halflead of reverse or double bob an even stage is always going to be ```[-1][-2]```. For the odd stages, it would be ```1[-2][-1]```.
+
+There's a handy alternative to writing something like ```[-1][-2]```: if you prepend the notation with ```~```, all the places are mirrored. So ```~12``` is the same as ```[-1][-2][n]```.
+
+
 # Example: Plain Hunt
 Standard PN on 4 bells is: ```x.14.x.14.x.14.x.14```
 
@@ -19,9 +66,6 @@ In APN we write this as a 'script' that looks like this[^1]:
 	base="x.1n"
 	length="2*n"
 ```
-
-
-
 
 Similarly, given the PN for plain hunt on odd stages:
 
@@ -296,7 +340,6 @@ Here's Double Bob defined as changes to Plain Bob:
 	minimumstage=4
 	base="id:pain_bob"
 	halflead="[-1]n|1[-1]n"
-	leadend="12|12n"
 ```
 
 
@@ -341,12 +384,13 @@ I use the word 'pseudo' because this method has a different structure to Little 
 
 m-Bob is the generalisation of Plain Bob and Grandsire: it is the method with m hunt bells. What we call Plain Bob would be known as 1-Bob, and Grandsire would be 2-Bob. If you rang Plain Bob and called a Bob at every lead, that would be the same as 3-Bob (since at a Bob in PB, three bells end up plain hunting at the lead end).
 
-It's an example of APN where we need to take a parameter.
+m-Bob is an example of APN where we need to take a parameter: the 'm'.
 
 Here's the definition of m-Bob when m is an even number:
 
 ```
 	id="even_m_bob"
+	minimumstage=4
 	params="m"
 	base="x.1n|n.1"
 	length="2*n"
@@ -357,6 +401,7 @@ Here's the definition of m-Bob when m is an odd number:
 
 ```
 	id="odd_m_bob"
+	minimumstage=5
 	params="m"
 	base="x.1n|n.1"
 	length="2*n"
