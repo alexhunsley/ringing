@@ -25,23 +25,13 @@ from lark import Lark
 #
 
 
-# l = Lark('''pnlist: ALL_SWAP
-# 	              | pnstring? (("." pnstring | ALL_SWAP pnstring?))* 
+l = Lark('''pnlist: separator
+				  | separator? pnstring (separator pnstring)* separator?
 
-# "x5.x"
+			?separator: ("." | ALL_SWAP)+
 
-# I seem to be able to remove the * from this line without ill effect:
-#                     | ALL_SWAP pnlist*
-
-l = Lark('''pnlist: posspair ("." posspair)*
-
-            ?posspair: pnstring
-                    | pnstring ALL_SWAP pnlist*
-                    | ALL_SWAP pnlist
-
- 			pnstring: ALL_SWAP
-  				    | pn+
-                    | REVERSE_PN pn*
+ 			pnstring: pn+
+                    | REVERSE_PN pn+
 
             pn: HEXDIGIT
 	          | "[" SIGNED_INT "]"
@@ -92,93 +82,125 @@ def parse(pnStr):
 	# return l.parse(canonicalPnStr) 
 
 
-print(canonicalisePnStr("12x"))
-print(canonicalisePnStr("x12"))
-print(canonicalisePnStr("12x23.43"))
-print(canonicalisePnStr("34x.12x"))
+# print(canonicalisePnStr("12x"))
+# print(canonicalisePnStr("x12"))
+# print(canonicalisePnStr("12x23.43"))
+# print(canonicalisePnStr("34x.12x"))
 
-# NOTE: we're not handling [x] items currently.
-# r = parse("x12.34x56.78x.56.x.324.x.x")
 
 # the 5 and 6 get split:
-r = parse("x1.3x56.78")
+r = parse("x1.3x56.78x")
+
 print(r)
 print(r.pretty())
 
 
 
 
-# print("==============")
+print("==============")
 
-# r = parse("2x")
-# print(r)
-# print(r.pretty())
+r = parse("2x")
+print(r)
+print(r.pretty())
 
-# print("==============")
+print("==============")
 
-# r = parse("x3x")
-# print(r)
-# print(r.pretty())
+r = parse("x3x")
+print(r)
+print(r.pretty())
 
-# print("==============")
-
-
-
-
-# r = parse("x.1")
-# print(r)
-# print(r.pretty())
-
-# print("==============")
-
-# r = parse("2.x")
-# print(r)
-# print(r.pretty())
-
-# print("==============")
-
-# r = parse("x.3.x")
-# print(r)
-# print(r.pretty())
-
-# print("==============")
+print("==============")
 
 
 
-# #works:
-# # r = parse("x.5x")
 
-# r = parse("x5.x")
+r = parse("x.1")
+print(r)
+print(r.pretty())
 
-# # r = parse("x1.2.3x5.x")
-# print(r)
-# print(r.pretty())
+print("==============")
 
+r = parse("2.x")
+print(r)
+print(r.pretty())
 
-# r = parse("x.5x")
+print("==============")
 
-# # r = parse("x1.2.3x5.x")
-# print(r)
-# print(r.pretty())
+r = parse("x.3.x")
+print(r)
+print(r.pretty())
 
-
-# r = parse("x.12.56.x5x.78x")
-
-# # r = parse("x1.2.3x5.x")
-# print(r)
-# print(r.pretty())
+print("==============")
 
 
-# r = parse("1.2.3.4.5.6.7.8.9")
 
-# # r = parse("x1.2.3x5.x")
-# print(r)
-# print(r.pretty())
+# works:
+r = parse("x.5x")
+print(r)
+print(r.pretty())
 
-# r = parse("x12.x[99]")
 
-# print(r)
-# print()
-# print(r.pretty())
+r = parse("x5.x")
 
-# print( l.parse("x").pretty() )
+# r = parse("x1.2.3x5.x")
+print(r)
+print(r.pretty())
+
+
+r = parse("x.5x")
+
+# r = parse("x1.2.3x5.x")
+print(r)
+print(r.pretty())
+
+
+r = parse("x.12.56.x5x.78x")
+
+# r = parse("x1.2.3x5.x")
+print(r)
+print(r.pretty())
+
+
+r = parse("1.2.3.4.5.6.7.8.9")
+
+# r = parse("x1.2.3x5.x")
+print(r)
+print(r.pretty())
+
+r = parse("x12.x[99]")
+
+print(r)
+print()
+print(r.pretty())
+
+print( l.parse("5").pretty() )
+
+print( l.parse("x").pretty() )
+
+r = l.parse(".x.")
+print(r)
+print()
+print(r.pretty())
+
+r = l.parse("x.x")
+print(r)
+print()
+print(r.pretty())
+
+print( l.parse(".x").pretty() )
+
+print( l.parse("x.").pretty() )
+
+print( l.parse("x.5").pretty() )
+
+print( l.parse("5.x").pretty() )
+
+print( l.parse("[1]").pretty() )
+print( l.parse(".[2]").pretty() )
+print( l.parse("[3].").pretty() )
+
+
+r = parse("x12.34x56.~78x.56.x.324.x[1].x")
+
+print(r)
+print(r.pretty())
