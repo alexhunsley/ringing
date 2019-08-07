@@ -30,14 +30,14 @@ from lark import Lark
 
 # "x5.x"
 
-l = Lark('''pnlist: pnstring ("." pnstring)*
-				  | pnlist* ALL_SWAP pnstringnoswap
-				  | pnlist pnstring
-				  | pnstringnoswap ALL_SWAP pnlist*
-				  | pnstringnoswap pnlist
+# I seem to be able to remove the * from this line without ill effect:
+#                     | ALL_SWAP pnlist*
 
-			pnstringnoswap: pn+
-                          | REVERSE_PN pn*
+l = Lark('''pnlist: posspair ("." posspair)*
+
+            posspair: pnstring
+                    | pnstring ALL_SWAP pnlist*
+                    | ALL_SWAP pnlist*
 
  			pnstring: ALL_SWAP
   				    | pn+
@@ -142,7 +142,6 @@ print("==============")
 #works:
 # r = parse("x.5x")
 
-#doesn't work:
 r = parse("x5.x")
 
 # r = parse("x1.2.3x5.x")
@@ -150,7 +149,25 @@ print(r)
 print(r.pretty())
 
 
+r = parse("x.5x")
 
+# r = parse("x1.2.3x5.x")
+print(r)
+print(r.pretty())
+
+
+r = parse("x.12.56.x5x.78x")
+
+# r = parse("x1.2.3x5.x")
+print(r)
+print(r.pretty())
+
+
+r = parse("1.2.3.4.5.6.7.8.9")
+
+# r = parse("x1.2.3x5.x")
+print(r)
+print(r.pretty())
 
 # r = parse("x12.x[99]")
 
