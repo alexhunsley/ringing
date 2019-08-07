@@ -98,76 +98,79 @@ print(canonicalisePnStr("12x23.43"))
 print(canonicalisePnStr("34x.12x"))
 
 # NOTE: we're not handling [x] items currently.
-r = parse("x1")
+r = parse("x12.34x56.78x.56.x.324.x.x")
 print(r)
 print(r.pretty())
 
-print("==============")
-
-r = parse("2x")
-print(r)
-print(r.pretty())
-
-print("==============")
-
-r = parse("x3x")
-print(r)
-print(r.pretty())
-
-print("==============")
 
 
 
+# print("==============")
 
-r = parse("x.1")
-print(r)
-print(r.pretty())
+# r = parse("2x")
+# print(r)
+# print(r.pretty())
 
-print("==============")
+# print("==============")
 
-r = parse("2.x")
-print(r)
-print(r.pretty())
+# r = parse("x3x")
+# print(r)
+# print(r.pretty())
 
-print("==============")
-
-r = parse("x.3.x")
-print(r)
-print(r.pretty())
-
-print("==============")
+# print("==============")
 
 
 
-#works:
+
+# r = parse("x.1")
+# print(r)
+# print(r.pretty())
+
+# print("==============")
+
+# r = parse("2.x")
+# print(r)
+# print(r.pretty())
+
+# print("==============")
+
+# r = parse("x.3.x")
+# print(r)
+# print(r.pretty())
+
+# print("==============")
+
+
+
+# #works:
+# # r = parse("x.5x")
+
+# r = parse("x5.x")
+
+# # r = parse("x1.2.3x5.x")
+# print(r)
+# print(r.pretty())
+
+
 # r = parse("x.5x")
 
-r = parse("x5.x")
-
-# r = parse("x1.2.3x5.x")
-print(r)
-print(r.pretty())
+# # r = parse("x1.2.3x5.x")
+# print(r)
+# print(r.pretty())
 
 
-r = parse("x.5x")
+# r = parse("x.12.56.x5x.78x")
 
-# r = parse("x1.2.3x5.x")
-print(r)
-print(r.pretty())
-
-
-r = parse("x.12.56.x5x.78x")
-
-# r = parse("x1.2.3x5.x")
-print(r)
-print(r.pretty())
+# # r = parse("x1.2.3x5.x")
+# print(r)
+# print(r.pretty())
 
 
-r = parse("1.2.3.4.5.6.7.8.9")
+# r = parse("1.2.3.4.5.6.7.8.9")
 
-# r = parse("x1.2.3x5.x")
-print(r)
-print(r.pretty())
+# # r = parse("x1.2.3x5.x")
+# print(r)
+# print(r.pretty())
 
 # r = parse("x12.x[99]")
 
