@@ -37,7 +37,7 @@ l = Lark('''pnlist: posspair ("." posspair)*
 
             posspair: pnstring
                     | pnstring ALL_SWAP pnlist*
-                    | ALL_SWAP pnlist*
+                    | ALL_SWAP pnlist
 
  			pnstring: ALL_SWAP
   				    | pn+
