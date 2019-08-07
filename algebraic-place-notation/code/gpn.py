@@ -35,7 +35,7 @@ from lark import Lark
 
 l = Lark('''pnlist: posspair ("." posspair)*
 
-            posspair: pnstring
+            ?posspair: pnstring
                     | pnstring ALL_SWAP pnlist*
                     | ALL_SWAP pnlist
 
@@ -98,7 +98,10 @@ print(canonicalisePnStr("12x23.43"))
 print(canonicalisePnStr("34x.12x"))
 
 # NOTE: we're not handling [x] items currently.
-r = parse("x12.34x56.78x.56.x.324.x.x")
+# r = parse("x12.34x56.78x.56.x.324.x.x")
+
+# the 5 and 6 get split:
+r = parse("x1.3x56.78")
 print(r)
 print(r.pretty())
 
