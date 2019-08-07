@@ -33,11 +33,13 @@ from lark import Lark
 # I seem to be able to remove the * from this line without ill effect:
 #                     | ALL_SWAP pnlist*
 
-l = Lark('''pnlist: posspair ("." posspair)*
+l = Lark('''eitherlist: dotlist
+	                  | xlist
+	                  | pnstring
 
-            ?posspair: pnstring
-                    | pnstring ALL_SWAP pnlist*
-                    | ALL_SWAP pnlist
+			   dotlist: eitherlist ("." eitherlist)*
+
+			   xlist: ALL_SWAP? eitherlist (ALL_SWAP eitherlist)?
 
  			pnstring: ALL_SWAP
   				    | pn+
@@ -52,7 +54,7 @@ l = Lark('''pnlist: posspair ("." posspair)*
 
 	        %import common.HEXDIGIT
 	        %import common.SIGNED_INT
-         ''', start='pnlist', ambiguity='resolve')
+         ''', start='eitherlist', ambiguity='resolve')
 
 # print( l.parse("1458[-10]").pretty() )
 # print( l.parse("~12").pretty() )
@@ -101,7 +103,11 @@ print(canonicalisePnStr("34x.12x"))
 # r = parse("x12.34x56.78x.56.x.324.x.x")
 
 # the 5 and 6 get split:
-r = parse("x1.3x56.78")
+# r = parse("x1.3x56.78")
+
+# r = parse("x1.3x5")
+r = parse("3x5")
+
 print(r)
 print(r.pretty())
 
