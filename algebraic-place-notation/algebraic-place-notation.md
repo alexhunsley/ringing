@@ -1,10 +1,10 @@
 # Generic Place Notation
 
-GPN is a nontation used to generate standard place notation, and hence method designs, in such a way that a method with a general structure can be generated for any valid stage.
+GPN is a notation used to generate standard place notation, and hence method designs, in such a way that a method with a general structure can be generated for any valid stage.
 
 It is based on overlaying repeated place patterns to build up place notation for a method.
 
-GPN also allows you to focus on how methods are constructed by defining a method as being something else plus some embellishments.
+GPN also allows you to focus on how methods are constructed/related by defining a method as being something else plus some embellishments.
 
 For example, in GPN you can specify plain bob as being plain hunt plus a 12 lead end.
 
