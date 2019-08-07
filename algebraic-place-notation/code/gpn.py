@@ -28,10 +28,19 @@ from lark import Lark
 # l = Lark('''pnlist: ALL_SWAP
 # 	              | pnstring? (("." pnstring | ALL_SWAP pnstring?))* 
 
+# "x5.x"
+
 l = Lark('''pnlist: pnstring ("." pnstring)*
+				  | pnlist* ALL_SWAP pnstringnoswap
+				  | pnlist pnstring
+				  | pnstringnoswap ALL_SWAP pnlist*
+				  | pnstringnoswap pnlist
+
+			pnstringnoswap: pn+
+                          | REVERSE_PN pn*
 
  			pnstring: ALL_SWAP
-  				    | pn*
+  				    | pn+
                     | REVERSE_PN pn*
 
             pn: HEXDIGIT
@@ -43,7 +52,7 @@ l = Lark('''pnlist: pnstring ("." pnstring)*
 
 	        %import common.HEXDIGIT
 	        %import common.SIGNED_INT
-         ''', start='pnlist', ambiguity='explicit')
+         ''', start='pnlist', ambiguity='resolve')
 
 # print( l.parse("1458[-10]").pretty() )
 # print( l.parse("~12").pretty() )
@@ -77,8 +86,10 @@ def canonicalisePnStr(str):
 	return newStr
 
 def parse(pnStr):
-	canonicalPnStr = canonicalisePnStr(pnStr)
-	print(l.parse(canonicalPnStr).pretty())
+	return l.parse(pnStr) 
+
+	# canonicalPnStr = canonicalisePnStr(pnStr)
+	# return l.parse(canonicalPnStr) 
 
 
 print(canonicalisePnStr("12x"))
@@ -86,7 +97,61 @@ print(canonicalisePnStr("x12"))
 print(canonicalisePnStr("12x23.43"))
 print(canonicalisePnStr("34x.12x"))
 
-r = parse("x12.x")
+# NOTE: we're not handling [x] items currently.
+r = parse("x1")
+print(r)
+print(r.pretty())
+
+print("==============")
+
+r = parse("2x")
+print(r)
+print(r.pretty())
+
+print("==============")
+
+r = parse("x3x")
+print(r)
+print(r.pretty())
+
+print("==============")
+
+
+
+
+r = parse("x.1")
+print(r)
+print(r.pretty())
+
+print("==============")
+
+r = parse("2.x")
+print(r)
+print(r.pretty())
+
+print("==============")
+
+r = parse("x.3.x")
+print(r)
+print(r.pretty())
+
+print("==============")
+
+
+
+#works:
+# r = parse("x.5x")
+
+#doesn't work:
+r = parse("x5.x")
+
+# r = parse("x1.2.3x5.x")
+print(r)
+print(r.pretty())
+
+
+
+
 # r = parse("x12.x[99]")
 
 # print(r)
