@@ -1,6 +1,8 @@
 from lark import Lark
 from lark import Transformer
 import sys
+import timeit
+
 #
 # examples of acceptable PN:
 #
@@ -48,7 +50,7 @@ l = Lark('''pnlist: _separator
 
 	        %import common.HEXDIGIT
 	        %import common.SIGNED_INT
-         ''', start='pnlist', ambiguity='resolve')
+         ''', start='pnlist', parser='lalr')
 
 # print( l.parse("1458[-10]").pretty() )
 # print( l.parse("~12").pretty() )
@@ -127,10 +129,10 @@ class MyTransformer(Transformer):
 def processGPNString(gpnStr):
 	parsed = parse(gpnStr)
 
-	print()
-	print("==================")
-	print("For %s I PARSED:\n\n%s" % (gpnStr, parsed.pretty()))
-	print()
+	# print()
+	# print("==================")
+	# print("For %s I PARSED:\n\n%s" % (gpnStr, parsed.pretty()))
+	# print()
 
 	transformed = MyTransformer().transform(parsed)
 
@@ -139,19 +141,27 @@ def processGPNString(gpnStr):
 	return transformed
 
 
-processGPNString("1[29]x5.6")
-processGPNString("x")
-processGPNString("xxxxx")
-processGPNString("xx....x.x..xxx.")
-processGPNString(".")
-processGPNString("......")
-processGPNString(".x")
-processGPNString("x.")
-processGPNString("2x")
-processGPNString("x2")
-processGPNString("x.2")
-processGPNString("2.x")
+def parseStuff():
+	processGPNString("1[29]x5.6")
+	processGPNString("x")
+	processGPNString("xxxxx")
+	processGPNString("xx....x.x..xxx.")
+	processGPNString(".")
+	processGPNString("......")
+	processGPNString(".x")
+	processGPNString("x.")
+	processGPNString("2x")
+	processGPNString("x2")
+	processGPNString("x.2")
+	processGPNString("2.x")
 
+#1000 trials with timeit:
+#    1.1s lalr
+#    14.8s earley
+
+# timeit.timeit(parseStuff, number=1000)
+
+parseStuff()
 
 # print("==============")
 
