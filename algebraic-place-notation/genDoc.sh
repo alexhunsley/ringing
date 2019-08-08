@@ -1,6 +1,6 @@
 #!/bin/bash
 
-export FILE=$(basename `find . -name '*.md'` .md)
+export FILE=$(basename `find . -depth 1 -name '*.md'` .md)
 
 echo "Operating on file $FILE"
 echo
