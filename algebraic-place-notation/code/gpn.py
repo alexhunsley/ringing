@@ -119,27 +119,20 @@ class MyTransformer(Transformer):
 	def separator(self, items):
 		return []
 
-# the 5 and 6 get split:
-# r = parse("x1.3x56.78x")
-r = parse("1[29]x5.6")
-
-print(r)
-print(r.pretty())
-
-transformed = MyTransformer().transform(r)
-print(transformed)
 
 
-# rr = processPN("1[29]x5.6")
+def processGPNString(gpnStr):
+	parsed = parse(gpnStr)
 
-def parsedDataToPNList(parsedData):
-	transformed = MyTransformer().transform(parsedData)
-	
-	# return transformed
+	transformed = MyTransformer().transform(parsed)
+
 	transformedRemoveEmptyItems = [x for x in transformed if x != []]
+
 	return transformedRemoveEmptyItems
 
-print(parsedDataToPNList(r))
+
+rr = processGPNString("1[29]x5.6")
+print(rr)
 
 # print("==============")
 
