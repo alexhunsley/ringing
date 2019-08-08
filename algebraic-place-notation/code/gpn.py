@@ -25,11 +25,14 @@ import sys
 #
 #
 
+# We prepend separator with _, which means it is always removed, but children remain in-place.
+# this avoids need to later remove empty items from the transformed list.
+# Anther (not as good) strategy is to throw the Discard exception in the transformer, which
+# would remove that node 
+l = Lark('''pnlist: _separator
+				  | _separator? pnstring (_separator pnstring)* _separator?
 
-l = Lark('''pnlist: separator
-				  | separator? pnstring (separator pnstring)* separator?
-
-			?separator: ("." | allswap)+
+			_separator: ("." | allswap)+
 
  			pnstring: pn+
                     | REVERSE_PN pn+
@@ -99,21 +102,21 @@ class MyTransformer(Transformer):
 	def pn(self, items):
 		if len(items) > 0:
 			item = items[0]
-			print("-- trans:pn, got item: ", item)
+			# print("-- trans:pn, got item: ", item)
 			return item
 		return items
 
 	def pnlist(self, items):
-		print("-- trans:pnlist, got items: ", items)
+		# print("-- trans:pnlist, got items: ", items)
 		# return list(map(lambda x: x.value, items))
 		return items
 
 	def pnstring(self, items):
-		print("-- trans:pnstring, got items: ", items)
+		# print("-- trans:pnstring, got items: ", items)
 		return list(map(lambda x: x.value, items))
 
 	def allswap(self, items):
-		print("-- trans:ALL_SWAP, got items: ", items)
+		# print("-- trans:ALL_SWAP, got items: ", items)
 		return ['x']
 
 	def separator(self, items):
@@ -124,15 +127,31 @@ class MyTransformer(Transformer):
 def processGPNString(gpnStr):
 	parsed = parse(gpnStr)
 
+	print()
+	print("==================")
+	print("For %s I PARSED:\n\n%s" % (gpnStr, parsed.pretty()))
+	print()
+
 	transformed = MyTransformer().transform(parsed)
 
-	transformedRemoveEmptyItems = [x for x in transformed if x != []]
+	print(transformed)
 
-	return transformedRemoveEmptyItems
+	return transformed
 
 
-rr = processGPNString("1[29]x5.6")
-print(rr)
+processGPNString("1[29]x5.6")
+processGPNString("x")
+processGPNString("xxxxx")
+processGPNString("xx....x.x..xxx.")
+processGPNString(".")
+processGPNString("......")
+processGPNString(".x")
+processGPNString("x.")
+processGPNString("2x")
+processGPNString("x2")
+processGPNString("x.2")
+processGPNString("2.x")
+
 
 # print("==============")
 
