@@ -247,9 +247,13 @@ spec = Lark('''file: "{" defline* "}"
   		  // property names for stuff that's not place-notation
 			   _propname: name
 			   	       | stage
+			   	       | length
+			   	       | id
 
 			   name: "name"
 			   stage: "stage"
+			   length: "length"
+			   id: "id"
 
   		  // property names for stuff that's is place-notation
 			   _pnpropname: notation
@@ -264,12 +268,12 @@ spec = Lark('''file: "{" defline* "}"
 			   pnvalue: "\\"" _pn "\\""
 
 			   // unescaped pn
-			   _pn: /~?[xXn.\-\[\]0-9A-Z]+/
+			   _pn: /~?[xXn.\-\[\]|0-9A-Z]+/
 
 			   strvalue: STRVALUE
 
 // find something better for this
-			   STRVALUE: /["][()\[\].,\- ?!:;0-9a-zA-Z]*["]/
+			   STRVALUE: /["][*()\[\].,\- ?!:;0-9a-zA-Z]*["]/
 
 			   numvalue: INT
 
@@ -315,7 +319,8 @@ class SpecTransformer(Transformer):
 		print("DEFLINE: items = ", items)
 		if isinstance(items[1], str):
 			print("found a string called %s, val = %s" % (items[0], items[1]))
-			self.stringProps[items[0]] = items[1]
+			# remove the quotation marks at either end while we're at it
+			self.stringProps[items[0]] = items[1][1:-1]
 		else:
 			print("found a number called %s, val = %s " % (items[0], items[1]))
 			self.intProps[items[0]] = items[1]
@@ -344,6 +349,14 @@ class SpecTransformer(Transformer):
 		# print("called stage, items =-", items)
 		return "stage"
 
+	def length(self, items):
+		# print("called stage, items =-", items)
+		return "length"
+
+	def id(self, items):
+		# print("called stage, items =-", items)
+		return "id"
+
 	def file(self, items):
 		# print("called stage, items =-", items)
 		return items
@@ -356,16 +369,18 @@ class SpecTransformer(Transformer):
 	# 	print("Got a number: ", items)
 	# 	return items[0].value
 
+# test1 = '''{ 
+# 	notation="~23x[5]."
+# 	base="x.14."
+#  	name=   "alex. hi! ? ( ) [asdsa]"
+# 	stage  =62 
+# }'''
+
 test1 = '''{ 
-	notation="~23x[5]."
-	base="x.14."
- 	name=   "alex. hi! ? ( ) [asdsa]"
-	stage  =62 
+	id="plainhunt"
+    base="n.1|x.1n"
+    length="2*n"
 }'''
-
-# test1 = '''{   notation = "bob"
-#   name="alex"}'''
-
 
 
 parsedSpec = spec.parse(test1) 
