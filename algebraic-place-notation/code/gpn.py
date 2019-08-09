@@ -4,6 +4,14 @@ import sys
 import timeit
 
 #
+# To avoid re-parsing the basic spec info for each stage generated,
+# there is a spec parsing stage that reads the spec including PN but doesn't
+# do any PN parsing yet.  We then generate (and cache) PN derived for different
+# stages as and when it is required, given desired stage.
+#
+
+
+#
 # examples of acceptable PN:
 #
 # x can have . around it:
@@ -230,6 +238,7 @@ print(t.pretty())
 #--------------------------------------------
 
 spec = Lark('''file: "{" defline* "}"
+                   | pn
 
 			   defline: propname "=" _value
 			   		  | pnpropname "=" pnvalue 
@@ -250,7 +259,11 @@ spec = Lark('''file: "{" defline* "}"
 
 			   _value: strvalue | numvalue
 
-			   pnvalue: /["]~?[xXn.\-\[\]0-9A-Z]*["]/
+			   // escaped pn
+			   pnvalue: "\\"" pn "\\""
+
+			   // unescaped pn
+			   pn: /~?[xXn.\-\[\]0-9A-Z]+/
 
 			   strvalue: STRVALUE
 
@@ -280,11 +293,15 @@ rr=spec.parse(test1)
 print(rr)
 print(rr.pretty())
 
-# test2 = '''
-# {
-# 	notation = "x.14.x.14.x.14.x.14"
-# }
-# '''
+
+# test direct use of PN
+test2 = "x.14.x.14.x.14.x.14"
+
+rr=spec.parse(test2) 
+print(rr)
+print(rr.pretty())
+
+
 
 # print(test2)
 
