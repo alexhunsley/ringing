@@ -95,9 +95,26 @@ def parse(pnStr):
 # print(canonicalisePnStr("12x23.43"))
 # print(canonicalisePnStr("34x.12x"))
 
+# Convert any negative place item to a positive place
+# given the stage.
+# e.g. '-2' on stage 8 would become 7, and '-8' would be 1.
+# Doesn't change or do anything regarding '~'.
+def reversePNItemForNegativePlaces(stage, item):
+	if item == '~':
+		return item
+
+	p = int(item)
+
+	if p < 0:
+		return stage + 1 + p
+
+	return p
 
 
 class MyTransformer(Transformer):
+	def __init__(self, stage):
+		self.stage = stage
+
 	# def pnstring(self, items):
 	# 	print("found items: ", items)
 	# 	return list(items)
@@ -115,7 +132,22 @@ class MyTransformer(Transformer):
 
 	def pnstring(self, items):
 		# print("-- trans:pnstring, got items: ", items)
-		return list(map(lambda x: x.value, items))
+		pnList = list(map(lambda x: x.value, items))
+
+		# deal with any negative items that were expressed as e.g. [-x]
+		pnList = [reversePNItemForNegativePlaces(self.stage, p) for p in pnList]
+
+		# pnList = list(map(reversePNItemForNegativePlaces, pnList))
+
+		# reverse entire list positions if prepending with '~' (means 'mirror')
+		if pnList[0] == '~':
+			pnList = pnList[1:]
+			pnList = list(map(lambda x: self.stage + 1 - int(x), pnList))
+		else:
+			pnList = list(map(lambda x: int(x), pnList))
+
+		pnList.sort()
+		return pnList
 
 	def allswap(self, items):
 		# print("-- trans:ALL_SWAP, got items: ", items)
@@ -134,7 +166,7 @@ def processGPNString(gpnStr):
 	# print("For %s I PARSED:\n\n%s" % (gpnStr, parsed.pretty()))
 	# print()
 
-	transformed = MyTransformer().transform(parsed)
+	transformed = MyTransformer(stage=8).transform(parsed)
 
 	print(transformed)
 
@@ -152,10 +184,10 @@ def parseStuff():
 	processGPNString("x.")
 	processGPNString("2x")
 	processGPNString("x2")
-	processGPNString("x.2")
-	processGPNString("2.x")
+	processGPNString("x.[-1][-2]")
+	processGPNString("4[-1].x")
 
-#1000 trials with timeit:
+#running 1000 trials with timeit:
 #    1.1s lalr
 #    14.8s earley
 
