@@ -9,7 +9,8 @@ import timeit
 # do any PN parsing yet.  We then generate (and cache) PN derived for different
 # stages as and when it is required, given desired stage.
 #
-
+# Using a custom parser for the spec config is OTT. Should use a Configuration file parser or similar.
+#
 
 #
 # examples of acceptable PN:
@@ -238,21 +239,21 @@ print(t.pretty())
 #--------------------------------------------
 
 spec = Lark('''file: "{" defline* "}"
-                   | pn
+                   | _pn
 
-			   defline: propname "=" _value
-			   		  | pnpropname "=" pnvalue 
+			   defline: _propname "=" _value
+			   		  | _pnpropname "=" pnvalue 
 
   		  // property names for stuff that's not place-notation
-			   propname: name
+			   _propname: name
 			   	       | stage
 
 			   name: "name"
 			   stage: "stage"
 
   		  // property names for stuff that's is place-notation
-			   pnpropname: notation
-			   			 | base
+			   _pnpropname: notation
+			   			  | base
 
 			   notation: "notation"
 			   base: "base"
@@ -260,10 +261,10 @@ spec = Lark('''file: "{" defline* "}"
 			   _value: strvalue | numvalue
 
 			   // escaped pn
-			   pnvalue: "\\"" pn "\\""
+			   pnvalue: "\\"" _pn "\\""
 
 			   // unescaped pn
-			   pn: /~?[xXn.\-\[\]0-9A-Z]+/
+			   _pn: /~?[xXn.\-\[\]0-9A-Z]+/
 
 			   strvalue: STRVALUE
 
@@ -279,27 +280,110 @@ spec = Lark('''file: "{" defline* "}"
             ''', start='file', parser='lalr')
 
 
+class SpecTransformer(Transformer):
+	def __init__(self):
+		self.stringProps = {}
+		self.intProps = {}
+		self.pnProps = {}
+
+	# def pnpropname(self, items):
+	# 	return items[0]
+
+	# def pnstring(self, items):
+	# 	print("found items: ", items)
+	# 	return list(items)
+	# def pnvalue(self, items):
+	# 	print("processing pn, got ", items)
+	# 	if len(items) > 0:
+	# 		item = items[0]
+	# 		# print("-- trans:pn, got item: ", item)
+
+	# 		# if item == 'n':
+	# 		# 	item = "[%d]" % self.stage
+
+	# 		return item
+
+	# 	return items
+
+	def strvalue(self, items):
+		return items[0].value
+
+	def numvalue(self, items):
+		return int(items[0].value)
+
+	def defline(self, items):
+		print("DEFLINE: items = ", items)
+		if isinstance(items[1], str):
+			print("found a string called %s, val = %s" % (items[0], items[1]))
+			self.stringProps[items[0]] = items[1]
+		else:
+			print("found a number called %s, val = %s " % (items[0], items[1]))
+			self.intProps[items[0]] = items[1]
+
+		# if items[0] == "stage":
+		# elif items[0] == "notation":
+		# 	print("found notation, val = ", items[1])
+		# elif items[0] == "base":
+		# 	print("found base, val = ", items[1])
+
+		return items
+
+	def notation(self, items):
+		return "notation"
+
+	def base(self, items):
+		return "base"
+
+	def name(self, items):
+		return "name"
+
+	def pnvalue(self, items):
+		return items[0].value
+
+	def stage(self, items):
+		# print("called stage, items =-", items)
+		return "stage"
+
+	def file(self, items):
+		# print("called stage, items =-", items)
+		return items
+
+	# def strvalue(self, items):
+	# 	if isinstance(items[0], str):
+	# 		print("Got a string: ", items)
+	# 		return items[0].value
+
+	# 	print("Got a number: ", items)
+	# 	return items[0].value
+
 test1 = '''{ 
 	notation="~23x[5]."
 	base="x.14."
  	name=   "alex. hi! ? ( ) [asdsa]"
-	stage   =62 
+	stage  =62 
 }'''
 
 # test1 = '''{   notation = "bob"
 #   name="alex"}'''
 
-rr=spec.parse(test1) 
-print(rr)
-print(rr.pretty())
 
 
-# test direct use of PN
-test2 = "x.14.x.14.x.14.x.14"
+parsedSpec = spec.parse(test1) 
+print(parsedSpec)
+print(parsedSpec.pretty())
 
-rr=spec.parse(test2) 
-print(rr)
-print(rr.pretty())
+specTx = SpecTransformer()
+specTransformed = specTx.transform(parsedSpec)
+
+print("spec transformed = ", specTransformed)
+
+print("spec TX dicts: strings = %s, ints = %s" % (specTx.stringProps, specTx.intProps))
+# # test direct use of PN
+# test2 = "x.14.x.14.x.14.x.14"
+
+# rr=spec.parse(test2) 
+# print(rr)
+# print(rr.pretty())
 
 
 
