@@ -231,27 +231,46 @@ print(t.pretty())
 
 spec = Lark('''file: "{" defline* "}"
 
-			   defline: PROPNAME "=" _value
+			   defline: propname "=" _value
+			   		  | pnpropname "=" pnvalue 
 
-			   PROPNAME: /[a-zA-Z]/+
+  		  // property names for stuff that's not place-notation
+			   propname: name
+			   	       | stage
+
+			   name: "name"
+			   stage: "stage"
+
+  		  // property names for stuff that's is place-notation
+			   pnpropname: notation
+			   			 | base
+
+			   notation: "notation"
+			   base: "base"
 
 			   _value: strvalue | numvalue
 
+			   pnvalue: /["]~?[xXn.\-\[\]0-9A-Z]*["]/
+
 			   strvalue: STRVALUE
 
-			   STRVALUE: "\\""/[a-zA-Z]/+"\\""
+// find something better for this
+			   STRVALUE: /["][()\[\].,\- ?!:;0-9a-zA-Z]*["]/
 
-			   numvalue: /\d+/
+			   numvalue: INT
 
 			   %import common.WS
 			   %ignore WS
+
+			   %import common.INT
             ''', start='file', parser='lalr')
 
 
 test1 = '''{ 
-notation = "bob"
-  name="alex"
-  stage=62
+	notation="~23x[5]."
+	base="x.14."
+ 	name=   "alex. hi! ? ( ) [asdsa]"
+	stage   =62 
 }'''
 
 # test1 = '''{   notation = "bob"
@@ -261,11 +280,11 @@ rr=spec.parse(test1)
 print(rr)
 print(rr.pretty())
 
-test2 = '''
-{
-	notation = "x.14.x.14.x.14.x.14"
-}
-'''
+# test2 = '''
+# {
+# 	notation = "x.14.x.14.x.14.x.14"
+# }
+# '''
 
 # print(test2)
 
