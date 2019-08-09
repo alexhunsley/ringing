@@ -91,7 +91,7 @@ In GPN we would write this as:
 
 Plain Bob is the same as plain hunt, except that we change the last piece of place notation to ```12``` (on even bells).
 
-To do this, our GPN script is as follows::
+To do this, our GPN script is as follows:
 
 ```
 	base="x.1n"

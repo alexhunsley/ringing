@@ -49,13 +49,18 @@ l = Lark('''odd_even_pn: pnlist
 
 			allswap: ALL_SWAP
 
+			DBLQUOTE: /"/
+
 	        REVERSE_PN: "~"
 	        ALL_SWAP: "x" | "X"
 			ENDCODE: "&"
 
-	        %import common.HEXDIGIT
+			%import common.HEXDIGIT
 	        %import common.SIGNED_INT
          ''', start='odd_even_pn', parser='lalr')
+
+
+
 
 # print( l.parse("1458[-10]").pretty() )
 # print( l.parse("~12").pretty() )
@@ -221,4 +226,47 @@ print(t.pretty())
 t = processGPNString("1n.3[-2]|x")
 print()
 print(t.pretty())
+
+#--------------------------------------------
+
+spec = Lark('''file: "{" defline* "}"
+
+			   defline: PROPNAME "=" _value
+
+			   PROPNAME: /[a-zA-Z]/+
+
+			   _value: strvalue | numvalue
+
+			   strvalue: STRVALUE
+
+			   STRVALUE: "\\""/[a-zA-Z]/+"\\""
+
+			   numvalue: /\d+/
+
+			   %import common.WS
+			   %ignore WS
+            ''', start='file', parser='lalr')
+
+
+test1 = '''{ 
+notation = "bob"
+  name="alex"
+  stage=62
+}'''
+
+# test1 = '''{   notation = "bob"
+#   name="alex"}'''
+
+rr=spec.parse(test1) 
+print(rr)
+print(rr.pretty())
+
+test2 = '''
+{
+	notation = "x.14.x.14.x.14.x.14"
+}
+'''
+
+# print(test2)
+
 
