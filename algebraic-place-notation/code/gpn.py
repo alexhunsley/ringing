@@ -31,7 +31,10 @@ import timeit
 # this avoids need to later remove empty items from the transformed list.
 # Anther (not as good) strategy is to throw the Discard exception in the transformer, which
 # would remove that node 
-l = Lark('''pnlist: _separator
+l = Lark('''odd_even_pn: pnlist
+	                   | pnlist "|" pnlist
+
+			pnlist: _separator
 				  | _separator? pnstring (_separator pnstring)* _separator?
 
 			_separator: ("." | allswap)+
@@ -52,7 +55,7 @@ l = Lark('''pnlist: _separator
 
 	        %import common.HEXDIGIT
 	        %import common.SIGNED_INT
-         ''', start='pnlist', parser='lalr')
+         ''', start='odd_even_pn', parser='lalr')
 
 # print( l.parse("1458[-10]").pretty() )
 # print( l.parse("~12").pretty() )
@@ -190,7 +193,6 @@ def processGPNString(gpnStr):
 
 	return transformed
 
-
 def parseStuff():
 	processGPNString("1[29]x5.6")
 	processGPNString("x")
@@ -212,4 +214,11 @@ def parseStuff():
 # timeit.timeit(parseStuff, number=1000)
 
 # parseStuff()
-processGPNString("1n.3[-2]")
+t = processGPNString("5x")
+print()
+print(t.pretty())
+
+t = processGPNString("1n.3[-2]|x")
+print()
+print(t.pretty())
+
