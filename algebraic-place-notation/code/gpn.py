@@ -39,8 +39,10 @@ l = Lark('''pnlist: _separator
  			pnstring: pn+
                     | REVERSE_PN pn+
 
-            pn: HEXDIGIT
+            pn: HEXDIGIT | TENOR_PN
 	          | "[" SIGNED_INT "]"
+
+	        TENOR_PN: "n"
 
 			allswap: ALL_SWAP
 
@@ -119,10 +121,16 @@ class MyTransformer(Transformer):
 	# 	print("found items: ", items)
 	# 	return list(items)
 	def pn(self, items):
+		print("processing pn, got ", items)
 		if len(items) > 0:
 			item = items[0]
 			# print("-- trans:pn, got item: ", item)
+
+			# if item == 'n':
+			# 	item = "[%d]" % self.stage
+
 			return item
+
 		return items
 
 	def pnlist(self, items):
@@ -131,8 +139,18 @@ class MyTransformer(Transformer):
 		return items
 
 	def pnstring(self, items):
+		print("now got: ", items)
+
+		# pnList = list(map(lambda x: self.stage if x == 'n' else x, items))
+
 		# print("-- trans:pnstring, got items: ", items)
 		pnList = list(map(lambda x: x.value, items))
+
+		print("made pnlist to ", pnList)
+
+		pnList = list(map(lambda x: str(self.stage) if x == 'n' else x, items))
+
+		print("made pnlist2 to ", pnList)
 
 		# deal with any negative items that were expressed as e.g. [-x]
 		pnList = [reversePNItemForNegativePlaces(self.stage, p) for p in pnList]
@@ -193,4 +211,5 @@ def parseStuff():
 
 # timeit.timeit(parseStuff, number=1000)
 
-parseStuff()
+# parseStuff()
+processGPNString("1n.3[-2]")
