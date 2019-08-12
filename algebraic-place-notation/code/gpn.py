@@ -1,5 +1,8 @@
 from lark import Lark
 from lark import Transformer
+
+from MethodSpec import *
+
 import sys
 import timeit
 
@@ -386,7 +389,6 @@ test1 = '''{
 }'''
 
 
-
 parsedSpec = spec.parse(test1) 
 print(parsedSpec)
 print(parsedSpec.pretty())
@@ -394,9 +396,16 @@ print(parsedSpec.pretty())
 specTx = SpecTransformer()
 specTransformed = specTx.transform(parsedSpec)
 
+specDict = dict(specTransformed)
+
 print("spec transformed = ", specTransformed)
 
 print("spec TX dicts: strings = %s, ints = %s" % (specTx.stringProps, specTx.intProps))
+
+ms = MethodSpec(specDict)
+
+print("--------------- made PN from methodSpec: ", ms.pn())
+
 # # test direct use of PN
 # test2 = "x.14.x.14.x.14.x.14"
 
