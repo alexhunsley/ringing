@@ -69,20 +69,18 @@ l = Lark('''odd_even_pn: pnlist
          ''', start='odd_even_pn', parser='lalr')
 
 
-
-
 # print( l.parse("1458[-10]").pretty() )
 # print( l.parse("~12").pretty() )
 # print( l.parse("1234").pretty() )
-
+#
 # print( l.parse("12.34.x.78[-22]").pretty() )
 # print( l.parse("12x34").pretty() )
-
+#
 # r = l.parse("x12x34.56")
-
+#
 # ensure each item in the PN is separated by '.', including 'X' items.
 # e.g. 12x34 -> 12.x.34
-def canonicalisePnStr(str):
+def canonicalise_pn_str(str):
 	newStr = ""
 
 	lastChar = ''
@@ -102,6 +100,7 @@ def canonicalisePnStr(str):
 
 	return newStr
 
+
 def parse(pnStr):
 	return l.parse(pnStr) 
 
@@ -118,7 +117,9 @@ def parse(pnStr):
 # given the stage.
 # e.g. '-2' on stage 8 would become 7, and '-8' would be 1.
 # Doesn't change or do anything regarding '~'.
-def reversePNItemForNegativePlaces(stage, item):
+
+
+def reverse_pn_item_for_negative_places(stage, item):
 	if item == '~':
 		return item
 
@@ -170,7 +171,7 @@ class MyTransformer(Transformer):
 		print("made pnlist2 to ", pnList)
 
 		# deal with any negative items that were expressed as e.g. [-x]
-		pnList = [reversePNItemForNegativePlaces(self.stage, p) for p in pnList]
+		pnList = [reverse_pn_item_for_negative_places(self.stage, p) for p in pnList]
 
 		# pnList = list(map(reversePNItemForNegativePlaces, pnList))
 
@@ -192,8 +193,7 @@ class MyTransformer(Transformer):
 		return []
 
 
-
-def processGPNString(gpnStr):
+def process_gpn_string(gpnStr):
 	parsed = parse(gpnStr)
 
 	# print()
@@ -207,19 +207,20 @@ def processGPNString(gpnStr):
 
 	return transformed
 
-def parseStuff():
-	processGPNString("1[29]x5.6")
-	processGPNString("x")
-	processGPNString("xxxxx")
-	processGPNString("xx....x.x..xxx.")
-	processGPNString(".")
-	processGPNString("......")
-	processGPNString(".x")
-	processGPNString("x.")
-	processGPNString("2x")
-	processGPNString("x2")
-	processGPNString("x.[-1][-2]")
-	processGPNString("4[-1].x")
+
+def parse_stuff():
+	process_gpn_string("1[29]x5.6")
+	process_gpn_string("x")
+	process_gpn_string("xxxxx")
+	process_gpn_string("xx....x.x..xxx.")
+	process_gpn_string(".")
+	process_gpn_string("......")
+	process_gpn_string(".x")
+	process_gpn_string("x.")
+	process_gpn_string("2x")
+	process_gpn_string("x2")
+	process_gpn_string("x.[-1][-2]")
+	process_gpn_string("4[-1].x")
 
 #running 1000 trials with timeit:
 #    1.1s lalr
@@ -228,11 +229,11 @@ def parseStuff():
 # timeit.timeit(parseStuff, number=1000)
 
 # parseStuff()
-t = processGPNString("5x")
+t = process_gpn_string("5x")
 print()
 print(t.pretty())
 
-t = processGPNString("1n.3[-2]|x")
+t = process_gpn_string("1n.3[-2]|x")
 print()
 print(t.pretty())
 
