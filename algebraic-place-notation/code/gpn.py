@@ -270,10 +270,10 @@ spec = Lark('''file: "{" defline* "}"
 			   // unescaped pn
 			   _pn: /~?[xXn.\-\[\]|0-9A-Z]+/
 
-			   strvalue: STRVALUE
+			   strvalue: "\\"" STRVALUE "\\""
 
 // find something better for this
-			   STRVALUE: /["][*()\[\].,\- ?!:;0-9a-zA-Z]*["]/
+			   STRVALUE: /[*()\[\].,\- ?!:;0-9a-zA-Z]+/
 
 			   numvalue: INT
 
@@ -320,7 +320,9 @@ class SpecTransformer(Transformer):
 		if isinstance(items[1], str):
 			print("found a string called %s, val = %s" % (items[0], items[1]))
 			# remove the quotation marks at either end while we're at it
-			self.stringProps[items[0]] = items[1][1:-1]
+#			print("Before removal: ", items[1])
+#			print("after removal: ", items[1][1:-1])
+			# self.stringProps[items[0]] = items[1][1:-1]
 		else:
 			print("found a number called %s, val = %s " % (items[0], items[1]))
 			self.intProps[items[0]] = items[1]
@@ -381,6 +383,7 @@ test1 = '''{
     base="n.1|x.1n"
     length="2*n"
 }'''
+
 
 
 parsedSpec = spec.parse(test1) 
