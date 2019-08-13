@@ -20,6 +20,15 @@ class MethodSpec():
         # if self._pn != None:
         #     return self._pn
 
+        parsedLeadend = None
+
+        leadend = self.leadend_for_stage(stage)
+
+        if leadend != None:
+            parsedLeadend = util.process_gpn_string(leadend, stage)
+
+        print("Found leadend: ", parsedLeadend)
+
         use_pn = self.pn_for_stage(stage)
         print("SFSF use_pn for stage: ", use_pn)
         parsed_pn = util.process_gpn_string(use_pn, stage)
@@ -43,11 +52,17 @@ class MethodSpec():
 
         # print("Eval check: ", simple_eval("4+n", names={'n': 3}))
         self._pn = parsed_pn
-        
+
+        if parsedLeadend != None:
+            self._pn[-1] = parsedLeadend[0]
+
         return self._pn
 
-    def pn_for_stage(self, stage):
-        parts = self.config_dict['base'].split("|")
+    def pn_for_key(self, key, stage):
+        if key not in self.config_dict:
+            return None
+
+        parts = self.config_dict[key].split("|")
 
         if len(parts) == 1:
             print("SFSF pn_for_stage, returning ", parts[0])
@@ -57,3 +72,49 @@ class MethodSpec():
 
         # even/odd order
         return parts[stage % 2]
+
+    def pn_for_stage(self, stage):
+        return self.pn_for_key("base", stage)
+
+    def leadend_for_stage(self, stage):
+        return self.pn_for_key("leadend", stage)
+
+    def gen_standard_pn(self, gpnList):
+        bells = "1234567890ETABCD"
+
+        print("gpnList = ", gpnList)
+        fullResult = []
+        for pnItem in gpnList:
+            print("pnItem = ", pnItem)
+
+            if pnItem[0] == 'x' or pnItem[0] == 'X':
+                fullResult.append('x')
+                continue
+
+            result = ""
+            for pn in pnItem:
+                print("pn = ", pn)
+                # convertedOnePart = list(map(lambda x: bells[int(x) - 1], pnItem))
+                # convertedOnePart = list(map(lambda x: bells[int(x) - 1], pn))
+
+                convertedOnePart = bells[pn - 1]
+                result = result + convertedOnePart
+
+            fullResult.append(result)
+
+        fullResult = '.'.join(fullResult)
+        print("MADE fullResult = ", fullResult)
+        return fullResult
+
+    def gen_link(self, stage):
+        title = "Untitled"
+        if 'name' in self.config_dict:
+            title = self.config_dict['name']
+            title = title.replace(" ", "%20")
+
+        standard_pn_list = self.gen_standard_pn(self.pn(stage))
+        print("standard_pn_list = ", standard_pn_list)
+
+        # return "HI"
+        return "http://www.boojum.org.uk/cgi-bin/line.pl?bells=%d&pn=%s&title=%s&action.x=1" \
+               % (stage, standard_pn_list, title)

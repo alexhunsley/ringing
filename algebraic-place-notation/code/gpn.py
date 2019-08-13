@@ -95,9 +95,11 @@ spec = Lark('''file: "{" defline* "}"
   		  // property names for stuff that's is place-notation
 			   _pnpropname: notation
 			   			  | base
+			   			  | leadend
 
 			   notation: "notation"
 			   base: "base"
+			   leadend: "leadend"
 
 			   _value: strvalue | numvalue
 
@@ -192,6 +194,10 @@ class SpecTransformer(Transformer):
 		# print("called stage, items =-", items)
 		return "length"
 
+	def leadend(self, items):
+		# print("called stage, items =-", items)
+		return "leadend"
+
 	def id(self, items):
 		# print("called stage, items =-", items)
 		return "id"
@@ -215,9 +221,11 @@ class SpecTransformer(Transformer):
 # 	stage  =62 
 # }'''
 
-test1 = '''{ 
+test1 = '''{
+	name="Plain Hunt"
 	id="plainhunt"
     base="x.1n|n.1"
+    leadend="12|12n"
     length="2*n"
 }'''
 
@@ -239,8 +247,9 @@ print("spec dict = ", specDict)
 
 print("spec TX dicts: strings = %s, ints = %s" % (specTx.stringProps, specTx.intProps))
 
-for s in range(2, 16):
+for s in range(8, 11):
 	print("--------------- made PN from methodSpec: ", ms.pn(s))
+	print("link: ", ms.gen_link(s))
 
 # # test direct use of PN
 # test2 = "x.14.x.14.x.14.x.14"
