@@ -222,11 +222,9 @@ class SpecTransformer(Transformer):
 # }'''
 
 test1 = '''{
-	name="Plain Hunt"
+	name="Evil Erin"
 	id="plainhunt"
-    base="x.1n|n.1"
-    leadend="12|12n"
-    length="2*n"
+    base="3.1.34n.n.34n.1"
 }'''
 
 # print(method_spec.TestClass())
@@ -247,7 +245,7 @@ print("spec dict = ", specDict)
 
 print("spec TX dicts: strings = %s, ints = %s" % (specTx.stringProps, specTx.intProps))
 
-for s in range(8, 11):
+for s in range(7, 16, 2):
 	print("--------------- made PN from methodSpec: ", ms.pn(s))
 	print("link: ", ms.gen_link(s))
 

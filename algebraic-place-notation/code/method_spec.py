@@ -107,9 +107,12 @@ class MethodSpec():
         return fullResult
 
     def gen_link(self, stage):
+        stage_names = ['Unary', 'Diddymus', 'Singles', 'Minimus', 'Doubles', 'Minor', 'Triples', 'Major', 'Caters', 'Royal', 'Cinques', 'Maximumus', '13', '14', '15', '16']
+
         title = "Untitled"
         if 'name' in self.config_dict:
             title = self.config_dict['name']
+            title = "%s %s" % (title, stage_names[stage - 1])
             title = title.replace(" ", "%20")
 
         standard_pn_list = self.gen_standard_pn(self.pn(stage))
