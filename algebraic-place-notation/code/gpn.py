@@ -40,6 +40,9 @@ import method_spec
 #
 #
 
+# To specify a range of places from a to b inclusive, we can write:
+#
+# a_b.  So e.g. 4_[-3].
 
 
 # def parse_stuff():
@@ -107,7 +110,7 @@ spec = Lark('''file: "{" defline* "}"
 			   pnvalue: "\\"" _pn "\\""
 
 			   // unescaped pn
-			   _pn: /~?[xXn.\-\[\]|0-9A-Z]+/
+			   _pn: /~?[xXn._\-\[\]|0-9A-Z]+/
 
 			   strvalue: "\\"" STRVALUE "\\""
 
@@ -121,6 +124,11 @@ spec = Lark('''file: "{" defline* "}"
 
 			   %import common.INT
             ''', start='file', parser='lalr')
+
+
+
+# print("res = ", util.insert_ranged_places(['1', '_', '3', '4', '5', '_', '9']))
+# sys.exit(1)
 
 
 class SpecTransformer(Transformer):
@@ -214,17 +222,16 @@ class SpecTransformer(Transformer):
 	# 	print("Got a number: ", items)
 	# 	return items[0].value
 
-# test1 = '''{ 
-# 	notation="~23x[5]."
-# 	base="x.14."
-#  	name=   "alex. hi! ? ( ) [asdsa]"
-# 	stage  =62 
+# test1 = '''{
+# 	name="Evil Erin"
+# 	id="plainhunt"
+#     base="3.1.34.x.34.1n|3.1.34n.n.34n.1"
 # }'''
 
 test1 = '''{
-	name="Evil Erin"
-	id="plainhunt"
-    base="3.1.34.x.34.1n|3.1.34n.n.34n.1"
+	name="Evil Erin with Places"
+	id="evilerinplaces"
+    base="3.1.3_[-3].x.3_[-3].1n|3.1.3_[-2]n.n.3_[-2]n.1"
 }'''
 
 # print(method_spec.TestClass())
@@ -245,7 +252,7 @@ print("spec dict = ", specDict)
 
 print("spec TX dicts: strings = %s, ints = %s" % (specTx.stringProps, specTx.intProps))
 
-for s in range(8, 9):
+for s in range(6, 11):
 	print("--------------- made PN from methodSpec: ", ms.pn(s))
 	print("link: ", ms.gen_link(s))
 

@@ -14,13 +14,17 @@ l = Lark('''pnlist: _separator
  			pnstring: pn+
                     | REVERSE_PN pn+
 
-            pn: HEXDIGIT | TENOR_PN
+            pn: HEXDIGIT 
+              | TENOR_PN
 	          | "[" SIGNED_INT "]"
+	          | UNDERSCORE
 
 	        TENOR_PN: "n"
 
 			allswap: ALL_SWAP
-
+	
+			UNDERSCORE: "_"
+			
 			DBLQUOTE: /"/
 
 	        REVERSE_PN: "~"
@@ -83,7 +87,9 @@ def parse(pnStr):
 
 
 def reverse_pn_item_for_negative_places(stage, item):
-	if item == '~':
+	print("REV ITEM: ", item)
+
+	if item == '~' or item == '_':
 		return item
 
 	p = int(item)
@@ -93,6 +99,42 @@ def reverse_pn_item_for_negative_places(stage, item):
 
 	return p
 
+
+# pn is a list like ['1', '4', '_', '7', 12].
+# we replace the '_' with all places between 4 and 7.
+def insert_ranged_places(pnList):
+	result = []
+
+	idx = 0
+
+	for placeIdx in range(0, len(pnList)):
+		print('placeIdx, idx = ', placeIdx, idx)
+
+		if idx == len(pnList):
+			break
+
+		if pnList[idx] == '_':
+			startPlace = int(pnList[idx - 1])
+			endPlace = int(pnList[idx + 1])
+
+			print("make range, start, end = ", startPlace, endPlace)
+			placesAsListOfInts = range(startPlace, endPlace + 1)
+			placesAsListOfStrs = list(map(lambda x: str(x), placesAsListOfInts))
+
+			# chop off start item to avoid repeat
+			result = result[:-1]
+
+			result += placesAsListOfStrs
+
+			# got to skip the '_' and the end item
+			idx += 1
+		else:
+			result.append(pnList[idx])
+
+		idx += 1
+
+
+	return result
 
 class MyTransformer(Transformer):
 	def __init__(self, stage):
@@ -130,13 +172,17 @@ class MyTransformer(Transformer):
 		print("made pnlist to ", pnList)
 
 		pnList = list(map(lambda x: str(self.stage) if x == 'n' else x, items))
-
-		print("made pnlist2 to ", pnList)
+		#
+		# print("made pnlist2 to ", pnList)
 
 		# deal with any negative items that were expressed as e.g. [-x]
 		pnList = [reverse_pn_item_for_negative_places(self.stage, p) for p in pnList]
 
 		# pnList = list(map(reversePNItemForNegativePlaces, pnList))
+
+		# deal with place range, e.g. 4_7 means 4567
+		# note the list contains strings, not ints, at this point
+		pnList = insert_ranged_places(pnList)
 
 		# reverse entire list positions if prepending with '~' (means 'mirror')
 		if pnList[0] == '~':
@@ -157,6 +203,9 @@ class MyTransformer(Transformer):
 
 	def odd_even_pn(self, items):
 		return list(items)
+
+	def underscore(self, items):
+		return ['_']
 
 def process_gpn_string(gpnStr, stage):
 	parsed = parse(gpnStr)
