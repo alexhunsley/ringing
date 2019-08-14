@@ -228,11 +228,18 @@ class SpecTransformer(Transformer):
 #     base="3.1.34.x.34.1n|3.1.34n.n.34n.1"
 # }'''
 
+# test1 = '''{
+# 	name="Evil Erin with Places"
+# 	id="evilerinplaces"
+#     base="3.1.3_[-3].x.3_[-3].1n|3.1.3_[-2]n.n.3_[-2]n.1"
+# }'''
+
 test1 = '''{
-	name="Evil Erin with Places"
-	id="evilerinplaces"
-    base="3.1.3_[-3].x.3_[-3].1n|3.1.3_[-2]n.n.3_[-2]n.1"
+	name="Almost Double Little Bob TR to 6"
+	id="almostdoublelittlebobtrto6"
+    base="x.1n.x.1n.x.56.x.1n.x.1n.x.12"
 }'''
+
 
 # print(method_spec.TestClass())
 
@@ -252,7 +259,7 @@ print("spec dict = ", specDict)
 
 print("spec TX dicts: strings = %s, ints = %s" % (specTx.stringProps, specTx.intProps))
 
-for s in range(6, 11):
+for s in range(6, 10, 2):
 	print("--------------- made PN from methodSpec: ", ms.pn(s))
 	print("link: ", ms.gen_link(s))
 
