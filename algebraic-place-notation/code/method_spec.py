@@ -107,7 +107,7 @@ class MethodSpec():
         return fullResult
 
     def gen_link(self, stage):
-        stage_names = ['Unary', 'Diddymus', 'Singles', 'Minimus', 'Doubles', 'Minor', 'Triples', 'Major', 'Caters', 'Royal', 'Cinques', 'Maximumus', '13', '14', '15', '16']
+        stage_names = ['Unary', 'Diddymus', 'Singles', 'Minimus', 'Doubles', 'Minor', 'Triples', 'Major', 'Caters', 'Royal', 'Cinques', 'Maximus', '13', '14', '15', '16']
 
         title = "Untitled"
         if 'name' in self.config_dict:
