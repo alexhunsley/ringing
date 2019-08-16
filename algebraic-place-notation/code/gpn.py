@@ -298,11 +298,11 @@ class SpecTransformer(Transformer):
 # }'''
 
 
-# test1 = '''{
-# 	name="Double Evil Erin"
-# 	id="doubleevilerinallplaces"
-#     base="3[-3].1n.34[-4][-3].x.34[-4][-3].1n"
-# }'''
+test1 = '''{
+	name="Double Evil Erin"
+	id="doubleevilerinallplaces"
+    base="x.34[-4][-3].1n.3[-3].1n.34[-4][-3]"
+}'''
 
 # test1 = '''{
 # 	name="Reverse Bob"
@@ -312,14 +312,14 @@ class SpecTransformer(Transformer):
 #     halflead="[-2][-1]"
 # }'''
 
-test1 = '''{
-	name="Double Bob"
-	id="doublebob"
-    base="x.1n:n.1"
-    length="2*n"
-    leadend="12"
-    halflead="[-2][-1]"
-}'''
+# test1 = '''{
+# 	name="Double Bob"
+# 	id="doublebob"
+#     base="x.1n:n.1"
+#     length="2*n"
+#     leadend="12"
+#     halflead="[-2][-1]"
+# }'''
 
 # print(method_spec.TestClass())
 
@@ -344,7 +344,8 @@ downloads_dir_name = "downloads"
 if not os.path.isdir(downloads_dir_name):
 	os.makedirs(downloads_dir_name)
 
-target_stages = range(5, 11)
+# target_stages = range(8, 13, 2)
+target_stages = [12]
 
 all_filenames = []
 for s in target_stages:
@@ -368,15 +369,15 @@ for s in target_stages:
 # make a merged PDF
 
 
-# all_pdfs_filename = "%s/%s - stages %s.pdf" % (downloads_dir_name, ms.name(), list(target_stages))
-#
-# if not os.path.isdir(all_pdfs_filename):
-# 	merger = PdfFileMerger()
-#
-# 	for pdf_filename in all_filenames:
-# 		merger.append(pdf_filename)
-#
-# 	merger.write(all_pdfs_filename)
-# 	merger.close()
-# else:
-# 	print("Skipping all-pdf file generation, it already exists")
+all_pdfs_filename = "%s/%s - stages %s.pdf" % (downloads_dir_name, ms.name(), list(target_stages))
+
+if not os.path.isdir(all_pdfs_filename):
+	merger = PdfFileMerger()
+
+	for pdf_filename in all_filenames:
+		merger.append(pdf_filename)
+
+	merger.write(all_pdfs_filename)
+	merger.close()
+else:
+	print("Skipping all-pdf file generation, it already exists")
