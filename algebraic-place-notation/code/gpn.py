@@ -228,7 +228,7 @@ class SpecTransformer(Transformer):
 test1 = '''{
 	name="PB variant"
 	id="pbvariant"
-    base="x.1_||.._6"
+    base="x.18.x.18.x.18.x.18.x.18.x.18.x.18.x.1_||.._8"
 }'''
 
 # test1 = '''{

@@ -119,13 +119,35 @@ def insert_ranged_places(pnList):
 		if idx == len(pnList):
 			break
 
-		if pnList[idx] == '_':
+		if isinstance(pnList[idx], int):
+			result.append(pnList[idx])
+		else:
+			pattern = '|'
+
+			# is a string for ranged: either '_' or '_pattern_'
+			if pnList[idx] == '_':
+				# is simple range
+				pass
+			else:
+				# is patterned range
+				pattern = pnList[idx][1:-1]
+				pass
+
 			startPlace = int(pnList[idx - 1])
 			endPlace = int(pnList[idx + 1])
 
 			print("make range, start, end = ", startPlace, endPlace)
 			placesAsListOfInts = range(startPlace, endPlace + 1)
-			placesAsListOfStrs = list(map(lambda x: str(x), placesAsListOfInts))
+
+			placesAsListOfIntsFilt = []
+			ix = 0
+			pattLen = len(pattern)
+			for p in placesAsListOfInts:
+				if pattern[ix % pattLen] == '|':
+					placesAsListOfIntsFilt.append(p)
+				ix += 1
+
+			placesAsListOfStrs = list(map(lambda x: str(x), placesAsListOfIntsFilt))
 
 			# chop off start item to avoid repeat
 			result = result[:-1]
@@ -134,8 +156,6 @@ def insert_ranged_places(pnList):
 
 			# got to skip the '_' and the end item
 			idx += 1
-		else:
-			result.append(pnList[idx])
 
 		idx += 1
 
