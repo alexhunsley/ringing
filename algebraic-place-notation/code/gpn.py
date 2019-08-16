@@ -217,6 +217,19 @@ class SpecTransformer(Transformer):
 	def file(self, items):
 		# print("called stage, items =-", items)
 		return items
+# raw version
+# test1 = '''{
+# 	name="PB variant"
+# 	id="pbvariant"
+#     base="x.18.x.18.x.18.x.18.x.18.x.18.x.18.x.1256"
+# }'''
+
+# place filling version
+test1 = '''{
+	name="PB variant"
+	id="pbvariant"
+    base="x.1_||.._6"
+}'''
 
 # test1 = '''{
 # 	name="Almost Double Little Bob TR to 6"
@@ -231,11 +244,11 @@ class SpecTransformer(Transformer):
 #     base="34.1n.34.x.34.1n"
 # }'''
 
-test1 = '''{
-	name="Evil Erin"
-	id="plainhunt"
-    base="3n.1n.34.x.34.1n:3.1.34n.n.34n.1"
-}'''
+# test1 = '''{
+# 	name="Evil Erin"
+# 	id="plainhunt"
+#     base="3n.1n.34.x.34.1n:3.1.34n.n.34n.1"
+# }'''
 
 #     base="3n.1n.3_[-3].x.3_[-3].1n:3.1.3_[-2]n.n.3_[-2]n.1"
 
@@ -309,7 +322,7 @@ downloads_dir_name = "downloads"
 if not os.path.isdir(downloads_dir_name):
 	os.makedirs(downloads_dir_name)
 
-target_stages = range(7, 9)
+target_stages = range(8, 9)
 
 all_filenames = []
 for s in target_stages:

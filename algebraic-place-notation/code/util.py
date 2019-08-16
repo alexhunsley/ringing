@@ -1,6 +1,6 @@
 from lark import Lark
 from lark import Transformer
-
+from lark.lexer import Token
 
 # We prepend separator with _, which means it is always removed, but children remain in-place.
 # this avoids need to later remove empty items from the transformed list.
@@ -18,9 +18,13 @@ l = Lark('''pnlist: _separator
               | TENOR_PN
 	          | "[" SIGNED_INT "]"
 	          | UNDERSCORE
-
+			  | UNDERSCORE PLACE_PATTERN_CHAR+ UNDERSCORE
+			  
 	        TENOR_PN: "n"
 
+			PLACE_PATTERN_CHAR: "."
+							  | "|"
+							  
 			allswap: ALL_SWAP
 	
 			UNDERSCORE: "_"
@@ -89,7 +93,7 @@ def parse(pnStr):
 def reverse_pn_item_for_negative_places(stage, item):
 	print("REV ITEM: ", item)
 
-	if item == '~' or item == '_':
+	if item[0] in ['~', '_']:
 		return item
 
 	p = int(item)
@@ -104,6 +108,8 @@ def reverse_pn_item_for_negative_places(stage, item):
 # we replace the '_' with all places between 4 and 7.
 def insert_ranged_places(pnList):
 	result = []
+
+	print("insert_ranged_places: ", pnList)
 
 	idx = 0
 
@@ -136,6 +142,16 @@ def insert_ranged_places(pnList):
 
 	return result
 
+# pnItem can either be a direct Token,
+# or a list of tokens
+def pnItemToValue(pnItem):
+	if isinstance(pnItem, Token):
+		return pnItem.value
+
+	list_of_values = list(map(lambda x: x.value, pnItem))
+
+	return ''.join(list_of_values)
+
 class MyTransformer(Transformer):
 	def __init__(self, stage):
 		self.stage = stage
@@ -145,7 +161,8 @@ class MyTransformer(Transformer):
 	# 	return list(items)
 	def pn(self, items):
 		print("processing pn, got ", items)
-		if len(items) > 0:
+		# todo this is where we make _||.._ into just _
+		if len(items) > 0  and items[0] != '_':
 			item = items[0]
 			# print("-- trans:pn, got item: ", item)
 
@@ -161,17 +178,22 @@ class MyTransformer(Transformer):
 		# return list(map(lambda x: x.value, items))
 		return items
 
+
+
 	def pnstring(self, items):
 		print("now got: ", items)
 
 		# pnList = list(map(lambda x: self.stage if x == 'n' else x, items))
 
 		# print("-- trans:pnstring, got items: ", items)
-		pnList = list(map(lambda x: x.value, items))
+
+		# todo only call value if it's not a list; if a list, process the _pattern_ thing into e.g. _||.._
+		# pnList = list(map(lambda x: x.value, items))
+		pnList = list(map(pnItemToValue, items))
 
 		print("made pnlist to ", pnList)
 
-		pnList = list(map(lambda x: str(self.stage) if x == 'n' else x, items))
+		pnList = list(map(lambda x: str(self.stage) if x == 'n' else x, pnList))
 		#
 		# print("made pnlist2 to ", pnList)
 
