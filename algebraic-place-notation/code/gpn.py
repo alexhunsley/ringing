@@ -1,5 +1,9 @@
 from lark import Lark
 from lark import Transformer
+import urllib.request
+import os
+from PyPDF2 import PdfFileMerger
+import time
 
 import simpleeval
 import util
@@ -225,20 +229,71 @@ class SpecTransformer(Transformer):
 # test1 = '''{
 # 	name="Evil Erin"
 # 	id="plainhunt"
-#     base="3.1.34.x.34.1n|3.1.34n.n.34n.1"
+#     base="3n.1n.34.x.34.1n|3.1.34n.n.34n.1"
 # }'''
+
+
+# test1 = '''{
+# 	name="Double Evil Erin (down to 3rds)"
+# 	id="doubleevilerin"
+#     base="34.1n.34.x.34.1n"
+# }'''
+
+
+# test1 = '''{
+# 	name="Almost Double Evil Erin (dodges)"
+# 	id="almostdoubleevilerin"
+#     base="3[-3].1n.34.x.34.1n"
+# }'''
+
+# test1 = '''{
+# 	name="Double Evil Erin"
+# 	id="doubleevilerin"
+#     base="3[-3].1n.3_[-3].x.3_[-3].1n"
+# }'''
+
+# #double evil erin odd - WIP
+# test1 = '''{
+# 	name="Double Evil Erin ODD"
+# 	id="doubleevilerin"
+#     base="3[-3].1n.3_[-3].x.3_[-3].1n"
+# }'''
+
+
+# test1 = '''{
+# 	name="Double Erin"
+# 	id="doubleerin"
+#     base="3[-3].1n.3[-3].x.3[-3].1n"
+# }'''
+
+test1 = '''{
+	name="Double Stuntman"
+	id="doublestuntman"
+    base="3[-3].1n.3[-3].x.3[-3].1n"
+}'''
+
+
+
+# test1 = '''{
+# 	name="Double Evil Erin (places)"
+# 	id="doubleevilerinplaces"
+#     base="3[-3].1n.3_[-3].x.3_[-3].1n"
+# }'''
+
+
+#     base="3n.1n.3_[-3].x.3_[-3].1n|3.1.3_[-2]n.n.3_[-2]n.1"
 
 # test1 = '''{
 # 	name="Evil Erin with Places"
 # 	id="evilerinplaces"
-#     base="3.1.3_[-3].x.3_[-3].1n|3.1.3_[-2]n.n.3_[-2]n.1"
+#     base="3n.1n.3_[-3].x.3_[-3].1n|3.1.3_n.n.3_n.1"
 # }'''
 
-test1 = '''{
-	name="Almost Double Little Bob TR to 6"
-	id="almostdoublelittlebobtrto6"
-    base="x.1n.x.1n.x.56.x.1n.x.1n.x.12"
-}'''
+# test1 = '''{
+# 	name="Almost Double Little Bob TR to 6"
+# 	id="almostdoublelittlebobtrto6"
+#     base="x.1n.x.1n.x.56.x.1n.x.1n.x.12"
+# }'''
 
 
 # print(method_spec.TestClass())
@@ -259,10 +314,48 @@ print("spec dict = ", specDict)
 
 print("spec TX dicts: strings = %s, ints = %s" % (specTx.stringProps, specTx.intProps))
 
-for s in range(6, 10, 2):
-	print("--------------- made PN from methodSpec: ", ms.pn(s))
-	print("link: ", ms.gen_link(s))
+downloads_dir_name = "downloads"
 
+if not os.path.isdir(downloads_dir_name):
+	os.makedirs(downloads_dir_name)
+
+target_stages = range(8, 9, 2)
+
+all_filenames = []
+for s in target_stages:
+	print("--------------- made PN from methodSpec: ", ms.pn(s))
+
+	(url, standard_pn_list, title) = ms.gen_link(s)
+	file_name = "%s/%s.pdf" % (downloads_dir_name, title)
+
+	all_filenames.append(file_name)
+	# skip PDFs we have already downloaded
+	if os.path.isfile(file_name):
+		print("Skipping due to existing download: '%s'" % file_name)
+		continue
+
+	print("link: ", url)
+
+	urllib.request.urlretrieve(url, file_name)
+
+	time.sleep(1)
+
+# make a merged PDF
+
+# print("all filenames = ", all_filenames)
+
+all_pdfs_filename = "%s/%s - stages %s.pdf" % (downloads_dir_name, ms.name(), list(target_stages))
+
+if not os.path.isdir(all_pdfs_filename):
+	merger = PdfFileMerger()
+
+	for pdf_filename in all_filenames:
+		merger.append(pdf_filename)
+
+	merger.write(all_pdfs_filename)
+	merger.close()
+else:
+	print("Skipping all-pdf file generation, it already exists")
 # # test direct use of PN
 # test2 = "x.14.x.14.x.14.x.14"
 

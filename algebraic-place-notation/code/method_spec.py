@@ -15,6 +15,9 @@ class MethodSpec():
         self._pn = None
         self.simpeval = SimpleEval()
 
+    def name(self):
+        return self.config_dict['name']
+
     # todo: cache against the stage
     def pn(self, stage):
         # if self._pn != None:
@@ -113,11 +116,11 @@ class MethodSpec():
         if 'name' in self.config_dict:
             title = self.config_dict['name']
             title = "%s %s" % (title, stage_names[stage - 1])
-            title = title.replace(" ", "%20")
+            url_title = title.replace(" ", "%20")
 
         standard_pn_list = self.gen_standard_pn(self.pn(stage))
         print("standard_pn_list = ", standard_pn_list)
 
         # return "HI"
-        return "http://www.boojum.org.uk/cgi-bin/line.pl?bells=%d&pn=%s&title=%s&action.x=1" \
-               % (stage, standard_pn_list, title)
+        return ("http://www.boojum.org.uk/cgi-bin/line.pl?bells=%d&pn=%s&title=%s&action.x=1" \
+               % (stage, standard_pn_list, url_title), standard_pn_list, title)
