@@ -65,7 +65,7 @@ class MethodSpec():
         if key not in self.config_dict:
             return None
 
-        parts = self.config_dict[key].split("|")
+        parts = self.config_dict[key].split(":")
 
         if len(parts) == 1:
             print("SFSF pn_for_stage, returning ", parts[0])

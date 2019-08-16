@@ -76,7 +76,7 @@ import method_spec
 #
 
 
-# t = util.process_gpn_string("1n.3[-2]|x")
+# t = util.process_gpn_string("1n.3[-2]:x")
 # print()
 # print(t.pretty())
 
@@ -114,7 +114,7 @@ spec = Lark('''file: "{" defline* "}"
 			   pnvalue: "\\"" _pn "\\""
 
 			   // unescaped pn
-			   _pn: /~?[xXn._\-\[\]|0-9A-Z]+/
+			   _pn: /~?[xXn._\-\[\]|:0-9A-Z]+/
 
 			   strvalue: "\\"" STRVALUE "\\""
 
@@ -218,18 +218,10 @@ class SpecTransformer(Transformer):
 		# print("called stage, items =-", items)
 		return items
 
-	# def strvalue(self, items):
-	# 	if isinstance(items[0], str):
-	# 		print("Got a string: ", items)
-	# 		return items[0].value
-
-	# 	print("Got a number: ", items)
-	# 	return items[0].value
-
 # test1 = '''{
-# 	name="Evil Erin"
-# 	id="plainhunt"
-#     base="3n.1n.34.x.34.1n|3.1.34n.n.34n.1"
+# 	name="Almost Double Little Bob TR to 6"
+# 	id="almostdoublelittlebobtrto6"
+#     base="x.1n.x.1n.x.56.x.1n.x.1n.x.12"
 # }'''
 
 
@@ -239,17 +231,30 @@ class SpecTransformer(Transformer):
 #     base="34.1n.34.x.34.1n"
 # }'''
 
+test1 = '''{
+	name="Evil Erin"
+	id="plainhunt"
+    base="3n.1n.34.x.34.1n:3.1.34n.n.34n.1"
+}'''
+
+#     base="3n.1n.3_[-3].x.3_[-3].1n:3.1.3_[-2]n.n.3_[-2]n.1"
+
+# test1 = '''{
+# 	name="Evil Erin with Places"
+# 	id="evilerinplaces"
+#     base="3n.1n.3_[-3].x.3_[-3].1n:3.1.3_n.n.3_n.1"
+# }'''
+
+# test1 = '''{
+# 	name="Evil Erin with alt dodge+places"
+# 	id="evilerinaltdodgeandplaces"
+#     base="3n.1n.3_||.._[-3].x.3_[-3].1n:3.1.3_||.._[-3][-2][-1].n.3_n.1"
+# }'''
 
 # test1 = '''{
 # 	name="Almost Double Evil Erin (dodges)"
 # 	id="almostdoubleevilerin"
 #     base="3[-3].1n.34.x.34.1n"
-# }'''
-
-# test1 = '''{
-# 	name="Double Evil Erin"
-# 	id="doubleevilerin"
-#     base="3[-3].1n.3_[-3].x.3_[-3].1n"
 # }'''
 
 # #double evil erin odd - WIP
@@ -266,13 +271,11 @@ class SpecTransformer(Transformer):
 #     base="3[-3].1n.3[-3].x.3[-3].1n"
 # }'''
 
-test1 = '''{
-	name="Double Stuntman"
-	id="doublestuntman"
-    base="3[-3].1n.3[-3].x.3[-3].1n"
-}'''
-
-
+# test1 = '''{
+# 	name="Double Evil Erin"
+# 	id="doubleevilerin"
+#     base="3[-3].1n.3_[-3].x.3_[-3].1n"
+# }'''
 
 # test1 = '''{
 # 	name="Double Evil Erin (places)"
@@ -281,19 +284,6 @@ test1 = '''{
 # }'''
 
 
-#     base="3n.1n.3_[-3].x.3_[-3].1n|3.1.3_[-2]n.n.3_[-2]n.1"
-
-# test1 = '''{
-# 	name="Evil Erin with Places"
-# 	id="evilerinplaces"
-#     base="3n.1n.3_[-3].x.3_[-3].1n|3.1.3_n.n.3_n.1"
-# }'''
-
-# test1 = '''{
-# 	name="Almost Double Little Bob TR to 6"
-# 	id="almostdoublelittlebobtrto6"
-#     base="x.1n.x.1n.x.56.x.1n.x.1n.x.12"
-# }'''
 
 
 # print(method_spec.TestClass())
@@ -319,7 +309,7 @@ downloads_dir_name = "downloads"
 if not os.path.isdir(downloads_dir_name):
 	os.makedirs(downloads_dir_name)
 
-target_stages = range(8, 9, 2)
+target_stages = range(7, 9)
 
 all_filenames = []
 for s in target_stages:
