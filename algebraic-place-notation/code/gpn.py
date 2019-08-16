@@ -93,12 +93,14 @@ spec = Lark('''file: "{" defline* "}"
 			   	       | stage
 			   	       | length
 			   	       | id
-
+                       | pn_location
+                       
 			   name: "name"
 			   stage: "stage"
 			   length: "length"
 			   id: "id"
-
+				pn_location: "p[" SIGNED_INT "]" 
+				
   		  // property names for stuff that's is place-notation
 			   _pnpropname: notation
 			   			  | base
@@ -129,6 +131,7 @@ spec = Lark('''file: "{" defline* "}"
 			   %ignore WS
 
 			   %import common.INT
+			   %import common.SIGNED_INT
             ''', start='file', parser='lalr')
 
 
@@ -224,6 +227,10 @@ class SpecTransformer(Transformer):
 		# print("called stage, items =-", items)
 		return items
 
+#what for this?
+	def pn_location(self, items):
+		return items
+
 # PB8 with ||.. pattern at leadend
 # test1 = '''{
 # 	name="PB variant"
@@ -317,9 +324,10 @@ test1 = '''{
 	id="doublebob"
     base="x.1n:n.1"
     length="2*n"
-    leadend="12"
+    p[-1]="12"
     halflead="[-2][-1]"
 }'''
+# leadend = "12"
 
 # print(method_spec.TestClass())
 
