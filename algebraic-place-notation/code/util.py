@@ -22,7 +22,7 @@ l = Lark('''pnlist: _separator
 			  
 	        TENOR_PN: "n"
 
-			PLACE_PATTERN_CHAR: "."
+			PLACE_PATTERN_CHAR: ","
 							  | "|"
 							  
 			allswap: ALL_SWAP

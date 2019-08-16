@@ -114,12 +114,12 @@ spec = Lark('''file: "{" defline* "}"
 			   pnvalue: "\\"" _pn "\\""
 
 			   // unescaped pn
-			   _pn: /~?[xXn._\-\[\]|:0-9A-Z]+/
+			   _pn: /~?[xXn,._\-\[\]|:0-9A-Z]+/
 
 			   strvalue: "\\"" STRVALUE "\\""
 
 // find something better for this
-			   STRVALUE: /[*()\[\].,\- ?!:;0-9a-zA-Z]+/
+			   STRVALUE: /[*+()\[\].,\- ?!:;0-9a-zA-Z]+/
 
 			   numvalue: INT
 
