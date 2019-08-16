@@ -103,10 +103,12 @@ spec = Lark('''file: "{" defline* "}"
 			   _pnpropname: notation
 			   			  | base
 			   			  | leadend
+			   			  | halflead
 
 			   notation: "notation"
 			   base: "base"
 			   leadend: "leadend"
+			   halflead: "halflead"
 
 			   _value: strvalue | numvalue
 
@@ -207,8 +209,12 @@ class SpecTransformer(Transformer):
 		return "length"
 
 	def leadend(self, items):
-		# print("called stage, items =-", items)
+		# print("called leadend, items =-", items)
 		return "leadend"
+
+	def halflead(self, items):
+		# print("called halflead, items =-", items)
+		return "halflead"
 
 	def id(self, items):
 		# print("called stage, items =-", items)
@@ -217,19 +223,13 @@ class SpecTransformer(Transformer):
 	def file(self, items):
 		# print("called stage, items =-", items)
 		return items
-# raw version
+
+# PB8 with ||.. pattern at leadend
 # test1 = '''{
 # 	name="PB variant"
 # 	id="pbvariant"
-#     base="x.18.x.18.x.18.x.18.x.18.x.18.x.18.x.1256"
+#     base="x.18.x.18.x.18.x.18.x.18.x.18.x.18.x.1_||.._8"
 # }'''
-
-# place filling version
-test1 = '''{
-	name="PB variant"
-	id="pbvariant"
-    base="x.18.x.18.x.18.x.18.x.18.x.18.x.18.x.1_||.._8"
-}'''
 
 # test1 = '''{
 # 	name="Almost Double Little Bob TR to 6"
@@ -261,7 +261,7 @@ test1 = '''{
 # test1 = '''{
 # 	name="Evil Erin with alt dodge+places"
 # 	id="evilerinaltdodgeandplaces"
-#     base="3n.1n.3_||.._[-3].x.3_[-3].1n:3.1.3_||.._[-3][-2][-1].n.3_n.1"
+#     base="3n.1n.3_||,,_[-3].x.3_||,,_[-3].1n:3.1.3_||,,_[-3][-2][-1].n.3_||,,_n.1"
 # }'''
 
 # test1 = '''{
@@ -285,19 +285,41 @@ test1 = '''{
 # }'''
 
 # test1 = '''{
-# 	name="Double Evil Erin"
-# 	id="doubleevilerin"
+# 	name="Double Evil Erin all places"
+# 	id="doubleevilerinallplaces"
 #     base="3[-3].1n.3_[-3].x.3_[-3].1n"
+# }'''
+
+#this is the same as evil erin on major I think
+# test1 = '''{
+# 	name="Double Evil Erin (places alt)"
+# 	id="doubleevilerinplacesalt"
+#     base="3[-3].1n.3_||,,_[-3].x.3_||,,_[-3].1n"
+# }'''
+
+
+# test1 = '''{
+# 	name="Double Evil Erin"
+# 	id="doubleevilerinallplaces"
+#     base="3[-3].1n.34[-4][-3].x.34[-4][-3].1n"
 # }'''
 
 # test1 = '''{
-# 	name="Double Evil Erin (places)"
-# 	id="doubleevilerinplaces"
-#     base="3[-3].1n.3_[-3].x.3_[-3].1n"
+# 	name="Reverse Bob"
+# 	id="reversebob"
+#     base="x.1n:n.1"
+#     length="2*n"
+#     halflead="[-2][-1]"
 # }'''
 
-
-
+test1 = '''{
+	name="Double Bob"
+	id="doublebob"
+    base="x.1n:n.1"
+    length="2*n"
+    leadend="12"
+    halflead="[-2][-1]"
+}'''
 
 # print(method_spec.TestClass())
 
@@ -322,7 +344,7 @@ downloads_dir_name = "downloads"
 if not os.path.isdir(downloads_dir_name):
 	os.makedirs(downloads_dir_name)
 
-target_stages = range(8, 9)
+target_stages = range(5, 11)
 
 all_filenames = []
 for s in target_stages:
@@ -345,29 +367,16 @@ for s in target_stages:
 
 # make a merged PDF
 
-# print("all filenames = ", all_filenames)
 
-all_pdfs_filename = "%s/%s - stages %s.pdf" % (downloads_dir_name, ms.name(), list(target_stages))
-
-if not os.path.isdir(all_pdfs_filename):
-	merger = PdfFileMerger()
-
-	for pdf_filename in all_filenames:
-		merger.append(pdf_filename)
-
-	merger.write(all_pdfs_filename)
-	merger.close()
-else:
-	print("Skipping all-pdf file generation, it already exists")
-# # test direct use of PN
-# test2 = "x.14.x.14.x.14.x.14"
-
-# rr=spec.parse(test2) 
-# print(rr)
-# print(rr.pretty())
-
-
-
-# print(test2)
-
-
+# all_pdfs_filename = "%s/%s - stages %s.pdf" % (downloads_dir_name, ms.name(), list(target_stages))
+#
+# if not os.path.isdir(all_pdfs_filename):
+# 	merger = PdfFileMerger()
+#
+# 	for pdf_filename in all_filenames:
+# 		merger.append(pdf_filename)
+#
+# 	merger.write(all_pdfs_filename)
+# 	merger.close()
+# else:
+# 	print("Skipping all-pdf file generation, it already exists")

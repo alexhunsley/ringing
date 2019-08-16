@@ -32,6 +32,16 @@ class MethodSpec():
 
         print("Found leadend: ", parsedLeadend)
 
+        halflead = self.halflead_for_stage(stage)
+
+        print("Found halflead1: ", halflead)
+
+        if halflead != None:
+            parsedHalflead = util.process_gpn_string(halflead, stage)
+
+        print("Found halflead2 (parsed): ", parsedHalflead)
+
+
         use_pn = self.pn_for_stage(stage)
         print("SFSF use_pn for stage: ", use_pn)
         parsed_pn = util.process_gpn_string(use_pn, stage)
@@ -59,6 +69,10 @@ class MethodSpec():
         if parsedLeadend != None:
             self._pn[-1] = parsedLeadend[0]
 
+        if parsedHalflead != None:
+            self._pn[int(len(self._pn)/2) - 1] = parsedHalflead[0]
+
+        print("AFTER replacements for lead and halflead, I got: ", self._pn)
         return self._pn
 
     def pn_for_key(self, key, stage):
@@ -81,6 +95,9 @@ class MethodSpec():
 
     def leadend_for_stage(self, stage):
         return self.pn_for_key("leadend", stage)
+
+    def halflead_for_stage(self, stage):
+        return self.pn_for_key("halflead", stage)
 
     def gen_standard_pn(self, gpnList):
         bells = "1234567890ETABCD"
