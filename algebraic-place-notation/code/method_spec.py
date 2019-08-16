@@ -24,13 +24,13 @@ class MethodSpec():
         #     return self._pn
 
         parsedLeadend = None
+        parsedHalflead = None
 
         leadend = self.leadend_for_stage(stage)
 
         if leadend != None:
             parsedLeadend = util.process_gpn_string(leadend, stage)
-
-        print("Found leadend: ", parsedLeadend)
+            print("Found leadend: ", parsedLeadend)
 
         halflead = self.halflead_for_stage(stage)
 
@@ -38,8 +38,7 @@ class MethodSpec():
 
         if halflead != None:
             parsedHalflead = util.process_gpn_string(halflead, stage)
-
-        print("Found halflead2 (parsed): ", parsedHalflead)
+            print("Found halflead2 (parsed): ", parsedHalflead)
 
 
         use_pn = self.pn_for_stage(stage)
