@@ -341,6 +341,18 @@ test1 = '''{
     base="3[-3].1n.3[-3].x.3[-3].1n"
 }'''
 
+
+# the thing that on 10 is 45.36.45.36.45.x.
+# valid on 6, 10, 14, ...
+# could write just base as base = [n/2]-[-n/2].1n, length = 6, leadend = 'x'
+# test1 = '''{
+# 	name="Split Erin"
+# 	id="spliterin"
+#     base="[n/2]-[-n/2].1n.[n/2]-[-n/2].1n.[n/2]-[-n/2].x"
+#     minimumstage="6"
+#     stageincrement="4"
+# }'''
+
 # test1 = '''{
 # 	name="Reverse Bob"
 # 	id="reversebob"
