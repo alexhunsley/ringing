@@ -1,4 +1,5 @@
 
+rounds = "1234567890ETABCDFGHIJKLMNOPQRSUVWXYZ"
 
 # we generate method rows from GPB internal notation, which looks like:
 # [['x'], [3, 4, 9, 10], [1, 12], [3, 10], [1, 12], [3, 4, 9, 10]]
@@ -38,3 +39,23 @@ def permute(row, gpn):
     return result
 
 
+def generateAllRows(gpn, stage):
+    startRounds = rounds[:stage]
+
+    row = startRounds
+
+    resultRows = [startRounds]
+
+    gpnIdx = 0
+    gpnLen = len(gpn)
+
+    while True:
+        row = permute(row, gpn[gpnIdx % gpnLen])
+        gpnIdx += 1
+
+        resultRows.append(row)
+
+        if row == startRounds:
+            break
+
+    return resultRows

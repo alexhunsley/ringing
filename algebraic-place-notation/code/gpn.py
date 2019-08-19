@@ -4,6 +4,7 @@ import urllib.request
 import os
 from PyPDF2 import PdfFileMerger
 import time
+import pprint
 
 import simpleeval
 import util
@@ -13,7 +14,13 @@ import timeit
 import method_spec
 import method_gen
 
-print("Permute result: ", method_gen.permute("123456", [1, 2, 3, 4]))
+pp = pprint.PrettyPrinter(indent=4)
+
+# print("Permute result: ", method_gen.permute("123456", [1, 2, 3, 4]))
+
+test_gpn = [['x'], [1, 4], ['x'], [1, 4], ['x'], [1, 4], ['x'], [1, 2]]
+print("Gen method: ", pp.pprint(method_gen.generateAllRows(test_gpn, 4)))
+
 sys.exit(1)
 
 #
