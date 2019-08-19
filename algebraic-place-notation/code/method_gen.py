@@ -18,7 +18,7 @@ def permute(row, gpn):
     idx = 0
 
     while idx < len(row):
-        print("idx = %d, gpn = %s" % (idx, gpn))
+        # print("idx = %d, gpn = %s" % (idx, gpn))
         # if we aren't at a place
         if len(gpn) == 0 or gpn[0] != idx + 1:
             # if we've reached end of row

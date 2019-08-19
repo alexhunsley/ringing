@@ -13,6 +13,7 @@ import sys
 import timeit
 import method_spec
 import method_gen
+import music
 
 pp = pprint.PrettyPrinter(indent=4)
 
@@ -384,36 +385,68 @@ if not os.path.isdir(downloads_dir_name):
 target_stages = [6]
 
 all_filenames = []
+
+
 for s in target_stages:
-	print("--------------- made PN from methodSpec: ", ms.pn(s))
+	gpn_for_rot = ms.pn(s)
+	gpn_len = len(gpn_for_rot)
 
-	(url, standard_pn_list, title) = ms.gen_link(s)
-	file_name = "%s/%s.pdf" % (downloads_dir_name, title)
+	# print("--------------- made PN from methodSpec: ", ms.pn(s))
 
-	all_filenames.append(file_name)
-	# skip PDFs we have already downloaded
-	if os.path.isfile(file_name):
-		print("Skipping due to existing download: '%s'" % file_name)
-		continue
+	for pn_rotation in range(0, gpn_len - 1):
 
-	print("link: ", url)
+		print("Using pn: ", gpn_for_rot)
+		allRows = method_gen.generateAllRows(gpn_for_rot, s)
+		pp.pprint(allRows)
 
-	urllib.request.urlretrieve(url, file_name)
+		# rotate the gpn
+		gpn_for_rot = gpn_for_rot[1:] + [gpn_for_rot[0]]
 
-	time.sleep(1)
+		rows = method_gen.generateAllRows(gpn_for_rot, s)
 
+		(music_score, music_details) = music.analyseMusic(rows)
+
+		(url, standard_pn_list, title) = ms.gen_link(s)
+
+		print("==========================================")
+		print("---> Music analysis: ")
+		print("GPN: ", gpn_for_rot)
+		print("music score: ", music_score)
+		print("Music details: ", music_details)
+
+		print("")
+		print("")
+
+		print("URL --> ", url)
+
+		# file_name = "%s/%s.pdf" % (downloads_dir_name, title)
+		#
+		# all_filenames.append(file_name)
+		# # skip PDFs we have already downloaded
+		# if os.path.isfile(file_name):
+		# 	print("Skipping due to existing download: '%s'" % file_name)
+		# 	continue
+		#
+		# print("link: ", url)
+		#
+		# urllib.request.urlretrieve(url, file_name)
+		#
+		# time.sleep(1)
+
+
+##################################################
 # make a merged PDF
 
 
-all_pdfs_filename = "%s/%s - stages %s.pdf" % (downloads_dir_name, ms.name(), list(target_stages))
-
-if not os.path.isdir(all_pdfs_filename):
-	merger = PdfFileMerger()
-
-	for pdf_filename in all_filenames:
-		merger.append(pdf_filename)
-
-	merger.write(all_pdfs_filename)
-	merger.close()
-else:
-	print("Skipping all-pdf file generation, it already exists")
+# all_pdfs_filename = "%s/%s - stages %s.pdf" % (downloads_dir_name, ms.name(), list(target_stages))
+#
+# if not os.path.isdir(all_pdfs_filename):
+# 	merger = PdfFileMerger()
+#
+# 	for pdf_filename in all_filenames:
+# 		merger.append(pdf_filename)
+#
+# 	merger.write(all_pdfs_filename)/Users/alex.hunsley/.pyenv/versions/3.7.1/bin/python /Users/alex.hunsley/Documents/devpers/ringing/algebraic-place-notation/code/gpn.py
+# 	merger.close()
+# else:
+# 	print("Skipping all-pdf file generation, it already exists")
