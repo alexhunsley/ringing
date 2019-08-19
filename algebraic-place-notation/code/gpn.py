@@ -18,10 +18,10 @@ pp = pprint.PrettyPrinter(indent=4)
 
 # print("Permute result: ", method_gen.permute("123456", [1, 2, 3, 4]))
 
-test_gpn = [['x'], [1, 4], ['x'], [1, 4], ['x'], [1, 4], ['x'], [1, 2]]
-print("Gen method: ", pp.pprint(method_gen.generateAllRows(test_gpn, 4)))
-
-sys.exit(1)
+# test_gpn = [['x'], [1, 4], ['x'], [1, 4], ['x'], [1, 4], ['x'], [1, 2]]
+# print("Gen method: ", pp.pprint(method_gen.generateAllRows(test_gpn, 4)))
+#
+# sys.exit(1)
 
 #
 # Minor music:
@@ -326,10 +326,18 @@ class SpecTransformer(Transformer):
 # }'''
 
 
+#   this is rotated a bit!
+# test1 = '''{
+# 	name="Double Evil Erin"
+# 	id="doubleevilerinallplaces"
+#     base="x.34[-4][-3].1n.3[-3].1n.34[-4][-3]"
+#     minimumstage="8"
+# }'''
+
 test1 = '''{
 	name="Double Evil Erin"
-	id="doubleevilerinallplaces"
-    base="x.34[-4][-3].1n.3[-3].1n.34[-4][-3]"
+	id="doubleevilerin"
+    base="3[-3].1n.3[-3].x.3[-3].1n"
 }'''
 
 # test1 = '''{
@@ -373,7 +381,7 @@ if not os.path.isdir(downloads_dir_name):
 	os.makedirs(downloads_dir_name)
 
 # target_stages = range(8, 13, 2)
-target_stages = [12]
+target_stages = [6]
 
 all_filenames = []
 for s in target_stages:
