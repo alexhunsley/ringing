@@ -11,6 +11,27 @@ import util
 import sys
 import timeit
 import method_spec
+import method_gen
+
+print("Permute result: ", method_gen.permute("123456", [1, 2, 3, 4]))
+sys.exit(1)
+
+#
+# Minor music:
+#
+#
+# 135246 queens
+# 246135 queens, flipped
+# 642531 back queens
+# 531642 back queens, flipped
+# 654321 backrounds
+# 321654 backrounds flipped)
+# 142536 tittums (<-- not in my double erin minor)
+# 415263 tittums, pair-flipped
+# 635241 back-tittums (<-- unsure)
+# 362514 kind-of flipped tittums
+#
+
 #
 # To avoid re-parsing the basic spec info for each stage generated,
 # there is a spec parsing stage that reads the spec including PN but doesn't

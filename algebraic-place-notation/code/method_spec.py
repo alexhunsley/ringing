@@ -18,6 +18,8 @@ class MethodSpec():
     def name(self):
         return self.config_dict['name']
 
+    # returns the place notation in GPN-internal format, which is purely number based (no E, T etc):
+    #    [['x'], [3, 4, 9, 10], [1, 12], [3, 10], [1, 12], [3, 4, 9, 10]]
     # todo: cache against the stage
     def pn(self, stage):
         # if self._pn != None:
