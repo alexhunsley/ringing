@@ -1,3 +1,4 @@
+import sys
 
 # only minor music for the moment
 # tuples are:
@@ -5,7 +6,8 @@
 
 #maybe score 65 at back badly!
 
-score_for_music_at_backstroke = 4
+score_for_music_at_backstroke = 6
+score_for_music_at_handstroke = 3
 score_for_65_at_backstroke = -4
 
 music = {
@@ -40,37 +42,58 @@ music = {
 
 # only handling minor for now
 def analyseMusic(rows):
+    # get rid of starting rounds so we only have rounds once, and even number of rows
+    rows = rows[1:]
+
+    # join hand and back changes into one string, so we check for wrap-around music
+    rows = [i + j for i, j in zip(rows[::2], rows[1::2])]
+
+    print("Wrapped rows=", rows)
+
     total_score = 0
     details = ""
 
     rowIdx = 0
     # don't analyse last row, it's rounds again
-    for r in rows[:-1]:
+    for rr in rows: #[:-1]:
         name = None
 
-        if r in music:
-            (name, score) = music[r]
-            total_score += score
+        for startIdx in range(0, 7):
+            r = rr[startIdx:startIdx + 6]
 
-            if (rowIdx % 2) == 1:
-                # it's backstroke
-                total_score += score_for_music_at_backstroke
-                name = name + " AT BACK"
-
-        if name != None:
-            details += "\n%s %s (row %d) %s" % (name, score, rowIdx, r)
-
-        name = None
-
-        if (rowIdx % 1) == 1:
-            # it's backstroke
-            if (r[4:] == "65"):
-                name = "65 at back"
-                score = score_for_65_at_backstroke
+            print("checking sub %s from full str %s" % (r, rr))
+            if r in music:
+                (name, score) = music[r]
                 total_score += score
 
-        if name != None:
-            details += "\n%s %s (row %d) %s" % (name, score, rowIdx, r)
+                if startIdx == 6:
+                    total_score += score_for_music_at_backstroke
+                    name = name + " AT BACK"
+                elif startIdx == 0:
+                    total_score += score_for_music_at_handstroke
+                    name = name + " AT HAND"
+                else:
+                    name = name + "  WRAPAROUND"
+
+            if name != None:
+                realRowCount = rowIdx * 2
+                if startIdx < 6:
+                    realRow = "%d(%d)" % (realRowCount, startIdx)
+                else:
+                    realRow = "%d(%d)" % (realRowCount + 1, startIdx - 6)
+
+                details += "\n%s %s (row %s) %s" % (name, score, realRow, r)
+
+            name = None
+
+            if startIdx == 6:
+                # it's backstroke
+                if (r[4:] == "65"):
+                    name = "65 at back"
+                    total_score += score_for_65_at_backstroke
+
+            if name != None:
+                details += "\n%s %s (row %d) %s" % (name, score, rowIdx, r)
 
         rowIdx += 1
 
