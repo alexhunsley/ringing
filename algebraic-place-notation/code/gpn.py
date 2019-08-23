@@ -284,6 +284,12 @@ class SpecTransformer(Transformer):
 #     base="3[-3].1n.3[-3].x.3[-3].1n"
 # }'''
 
+test1 = '''{
+	name="Double Erin not - 2"
+	id="doubleerinnotminus2"
+    base="3[-3].1n.3[-3].1n.3[-3].x"
+}'''
+
 # test1 = '''{
 # 	name="Double Evil Erin all places"
 # 	id="doubleevilerinallplaces"
@@ -298,11 +304,18 @@ class SpecTransformer(Transformer):
 # }'''
 
 
-test1 = '''{
-	name="Double Evil Erin"
-	id="doubleevilerinallplaces"
-    base="x.34[-4][-3].1n.3[-3].1n.34[-4][-3]"
-}'''
+# test1 = '''{
+# 	name="Double Evil Erin (not-2)"
+# 	id="doubleevilerinnotminus2"
+#     base="x.34[-4][-3].1n.3[-3].1n.34[-4][-3]"
+# }'''
+
+#works: (but 2 part differential)
+# test1 = '''{
+# 	name="Stuntman Differential"
+# 	id="stuntmandifferential"
+#     base="38.16.x.38.16.38.16.38.x.16.38.16"
+# }'''
 
 # test1 = '''{
 # 	name="Reverse Bob"
@@ -345,7 +358,7 @@ if not os.path.isdir(downloads_dir_name):
 	os.makedirs(downloads_dir_name)
 
 # target_stages = range(8, 13, 2)
-target_stages = [12]
+target_stages = [6, 8]
 
 all_filenames = []
 for s in target_stages:
