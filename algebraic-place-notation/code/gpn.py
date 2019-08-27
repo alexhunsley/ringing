@@ -327,19 +327,28 @@ class SpecTransformer(Transformer):
 # }'''
 
 
-#   this is rotated a bit!
+# DUOBLE EVIL ERIN MAJOR HERE! THIS ONE!
 # test1 = '''{
-# 	name="Double Evil Erin"
+# 	name="Double Evil Erin with bobbo 5n"
 # 	id="doubleevilerinallplaces"
-#     base="x.34[-4][-3].1n.3[-3].1n.34[-4][-3]"
-#     minimumstage="8"
+#     base="34[-4][-3].1n.3[-3].1n.34[-4][-3].x"
 # }'''
 
+# this rotates last three bells to right every 4 leads (a bob every lead)
 test1 = '''{
-	name="Double Evil Erin"
-	id="doubleevilerin"
-    base="3[-3].1n.3[-3].x.3[-3].1n"
+	name="Double Evil Erin with bobbo 5n"
+	id="doubleevilerinallplaces"
+    base="34[-4][-3].1n.3[-3].14.34[-4][-3].x"
 }'''
+
+
+# minimumstage = "8"
+
+# test1 = '''{
+# 	name="Double Evil Erin 2"
+# 	id="doubleevilerin"
+#     base="3[-3].1n.3[-3].1n.3[-3].x"
+# }'''
 
 
 # the thing that on 10 is 45.36.45.36.45.x.
@@ -394,7 +403,7 @@ if not os.path.isdir(downloads_dir_name):
 	os.makedirs(downloads_dir_name)
 
 # target_stages = range(8, 13, 2)
-target_stages = [6]
+target_stages = [8]
 
 all_filenames = []
 
@@ -405,45 +414,47 @@ for s in target_stages:
 
 	# print("--------------- made PN from methodSpec: ", ms.pn(s))
 
-	for pn_rotation in range(0, gpn_len - 1):
+	# for pn_rotation in range(0, gpn_len - 1):
+	for pn_rotation in range(0, 1):
 
 		print("Using pn: ", gpn_for_rot)
 		allRows = method_gen.generateAllRows(gpn_for_rot, s)
 		pp.pprint(allRows)
 
 		# rotate the gpn
-		gpn_for_rot = gpn_for_rot[1:] + [gpn_for_rot[0]]
-
-		rows = method_gen.generateAllRows(gpn_for_rot, s)
-
-		(music_score, music_details) = music.analyseMusic(rows)
+		# gpn_for_rot = gpn_for_rot[1:] + [gpn_for_rot[0]]
+		#
+		# rows = method_gen.generateAllRows(gpn_for_rot, s)
+		#
+		# (music_score, music_details) = music.analyseMusic(rows)
+		#
+		#
+		# print("==========================================")
+		# print("---> Music analysis: ")
+		# print("GPN: ", gpn_for_rot)
+		# print("music score: ", music_score)
+		# print("Music details: ", music_details)
+		#
+		# print("")
+		# print("")
+		#
+		# print("URL --> ", url)
 
 		(url, standard_pn_list, title) = ms.gen_link(s)
 
-		print("==========================================")
-		print("---> Music analysis: ")
-		print("GPN: ", gpn_for_rot)
-		print("music score: ", music_score)
-		print("Music details: ", music_details)
+		file_name = "%s/%s.pdf" % (downloads_dir_name, title)
 
-		print("")
-		print("")
+		all_filenames.append(file_name)
+		# skip PDFs we have already downloaded
+		if os.path.isfile(file_name):
+			print("Skipping due to existing download: '%s'" % file_name)
+			continue
 
-		print("URL --> ", url)
+		print("link: ", url)
 
-		# file_name = "%s/%s.pdf" % (downloads_dir_name, title)
-		#
-		# all_filenames.append(file_name)
-		# # skip PDFs we have already downloaded
-		# if os.path.isfile(file_name):
-		# 	print("Skipping due to existing download: '%s'" % file_name)
-		# 	continue
-		#
-		# print("link: ", url)
-		#
-		# urllib.request.urlretrieve(url, file_name)
-		#
-		# time.sleep(1)
+		urllib.request.urlretrieve(url, file_name)
+
+		time.sleep(1)
 
 
 ##################################################
@@ -458,7 +469,7 @@ for s in target_stages:
 # 	for pdf_filename in all_filenames:
 # 		merger.append(pdf_filename)
 #
-# 	merger.write(all_pdfs_filename)/Users/alex.hunsley/.pyenv/versions/3.7.1/bin/python /Users/alex.hunsley/Documents/devpers/ringing/algebraic-place-notation/code/gpn.py
+# 	merger.write(all_pdfs_filename)
 # 	merger.close()
 # else:
 # 	print("Skipping all-pdf file generation, it already exists")
