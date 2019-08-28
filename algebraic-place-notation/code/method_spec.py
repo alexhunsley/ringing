@@ -127,7 +127,7 @@ class MethodSpec():
         print("MADE fullResult = ", fullResult)
         return fullResult
 
-    def gen_link(self, stage):
+    def gen_link(self, stage, pnRotAmount):
         stage_names = ['Unary', 'Diddymus', 'Singles', 'Minimus', 'Doubles', 'Minor', 'Triples', 'Major', 'Caters', 'Royal', 'Cinques', 'Maximus', '13', '14', '15', '16']
 
         title = "Untitled"
@@ -136,7 +136,11 @@ class MethodSpec():
             title = "%s %s" % (title, stage_names[stage - 1])
             url_title = title.replace(" ", "%20")
 
-        standard_pn_list = self.gen_standard_pn(self.pn(stage))
+        pn_to_rot = self.pn(stage)
+        pn_to_rot = util.rotateLeft(pn_to_rot, pnRotAmount)
+
+        standard_pn_list = self.gen_standard_pn(pn_to_rot)
+
         print("standard_pn_list = ", standard_pn_list)
 
         # return "HI"

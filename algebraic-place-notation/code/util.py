@@ -2,6 +2,14 @@ from lark import Lark
 from lark import Transformer
 from lark.lexer import Token
 
+def rotateRight(l, n):
+	n = n % len(l)
+	return l[-n:] + l[:-n]
+
+def rotateLeft(l, n):
+	n = n % len(l)
+	return l[n:] + l[:n]
+
 # We prepend separator with _, which means it is always removed, but children remain in-place.
 # this avoids need to later remove empty items from the transformed list.
 # Anther (not as good) strategy is to throw the Discard exception in the transformer, which

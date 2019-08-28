@@ -17,6 +17,12 @@ import music
 
 pp = pprint.PrettyPrinter(indent=4)
 
+# a=[1,2,3,4,5]
+#
+# print(util.rotateLeft(a, 6))
+# print(util.rotateRight(a, 6))
+# sys.exit(1)
+
 # print("Permute result: ", method_gen.permute("123456", [1, 2, 3, 4]))
 
 # test_gpn = [['x'], [1, 4], ['x'], [1, 4], ['x'], [1, 4], ['x'], [1, 2]]
@@ -327,19 +333,19 @@ class SpecTransformer(Transformer):
 # }'''
 
 
-# DUOBLE EVIL ERIN MAJOR HERE! THIS ONE!
-# test1 = '''{
-# 	name="Double Evil Erin with bobbo 5n"
-# 	id="doubleevilerinallplaces"
-#     base="34[-4][-3].1n.3[-3].1n.34[-4][-3].x"
-# }'''
+# DOUBLE EVIL ERIN MAJOR HERE! THIS ONE!
+test1 = '''{
+	name="Double Evil Erin"
+	id="doubleevilerinallplaces"
+    base="34[-4][-3].1n.3[-3].1n.34[-4][-3].x"
+}'''
 
 # this rotates last three bells to right every 4 leads (a bob every lead)
-test1 = '''{
-	name="Double Evil Erin with bobbo 5n"
-	id="doubleevilerinallplaces"
-    base="34[-4][-3].1n.3[-3].14.34[-4][-3].x"
-}'''
+# test1 = '''{
+# 	name="Double Evil Erin blooob"
+# 	id="doubleevilerinallplaces"
+#     base="34[-4][-3].1n.3[-3].14.34[-4][-3].x"
+# }'''
 
 
 # minimumstage = "8"
@@ -403,26 +409,34 @@ if not os.path.isdir(downloads_dir_name):
 	os.makedirs(downloads_dir_name)
 
 # target_stages = range(8, 13, 2)
-target_stages = [8]
+target_stages = [8, 10]
 
 all_filenames = []
 
+make_merged_pdf = True
+process_all_pn_rotations = False
 
 for s in target_stages:
 	gpn_for_rot = ms.pn(s)
 	gpn_len = len(gpn_for_rot)
 
+	if process_all_pn_rotations:
+		pn_rotations = range(0, gpn_len)
+	else:
+		pn_rotations = [0]
+
 	# print("--------------- made PN from methodSpec: ", ms.pn(s))
 
-	# for pn_rotation in range(0, gpn_len - 1):
-	for pn_rotation in range(0, 1):
+	for pn_rotation in pn_rotations:
 
-		print("Using pn: ", gpn_for_rot)
+		gpn_for_rot = util.rotateLeft(gpn_for_rot, pn_rotation)
+
+		print("Doing rot: ", pn_rotation)
+
+		print("Using pn (after rot): ", gpn_for_rot)
 		allRows = method_gen.generateAllRows(gpn_for_rot, s)
 		pp.pprint(allRows)
 
-		# rotate the gpn
-		# gpn_for_rot = gpn_for_rot[1:] + [gpn_for_rot[0]]
 		#
 		# rows = method_gen.generateAllRows(gpn_for_rot, s)
 		#
@@ -440,7 +454,10 @@ for s in target_stages:
 		#
 		# print("URL --> ", url)
 
-		(url, standard_pn_list, title) = ms.gen_link(s)
+		(url, standard_pn_list, title) = ms.gen_link(s, pn_rotation)
+
+		if process_all_pn_rotations:
+			title = "%s (pn_rot=%s)" % (title, pn_rotation)
 
 		file_name = "%s/%s.pdf" % (downloads_dir_name, title)
 
@@ -460,16 +477,16 @@ for s in target_stages:
 ##################################################
 # make a merged PDF
 
+if make_merged_pdf and len(target_stages) > 1:
+	all_pdfs_filename = "%s/%s - stages %s.pdf" % (downloads_dir_name, ms.name(), list(target_stages))
 
-# all_pdfs_filename = "%s/%s - stages %s.pdf" % (downloads_dir_name, ms.name(), list(target_stages))
-#
-# if not os.path.isdir(all_pdfs_filename):
-# 	merger = PdfFileMerger()
-#
-# 	for pdf_filename in all_filenames:
-# 		merger.append(pdf_filename)
-#
-# 	merger.write(all_pdfs_filename)
-# 	merger.close()
-# else:
-# 	print("Skipping all-pdf file generation, it already exists")
+	if not os.path.isdir(all_pdfs_filename):
+		merger = PdfFileMerger()
+
+		for pdf_filename in all_filenames:
+			merger.append(pdf_filename)
+
+		merger.write(all_pdfs_filename)
+		merger.close()
+	else:
+		print("Skipping all-pdf file generation, it already exists")
