@@ -54,11 +54,13 @@ def analyseMusic(rows):
     details = ""
 
     rowIdx = 0
+    score = 0
+
     # don't analyse last row, it's rounds again
     for rr in rows: #[:-1]:
-        name = None
 
         for startIdx in range(0, 7):
+            name = ""
             r = rr[startIdx:startIdx + 6]
 
             print("checking sub %s from full str %s" % (r, rr))

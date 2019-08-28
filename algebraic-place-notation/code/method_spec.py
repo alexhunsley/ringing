@@ -127,13 +127,17 @@ class MethodSpec():
         print("MADE fullResult = ", fullResult)
         return fullResult
 
-    def gen_link(self, stage, pnRotAmount):
+    def gen_link(self, stage, pnRotAmount, extraInfo):
         stage_names = ['Unary', 'Diddymus', 'Singles', 'Minimus', 'Doubles', 'Minor', 'Triples', 'Major', 'Caters', 'Royal', 'Cinques', 'Maximus', '13', '14', '15', '16']
 
         title = "Untitled"
         if 'name' in self.config_dict:
             title = self.config_dict['name']
             title = "%s %s" % (title, stage_names[stage - 1])
+
+            if extraInfo != None:
+                title = "%s %s" % (title, extraInfo)
+
             url_title = title.replace(" ", "%20")
 
         pn_to_rot = self.pn(stage)

@@ -313,11 +313,11 @@ class SpecTransformer(Transformer):
 # }'''
 
 
-# test1 = '''{
-# 	name="Double Erin"
-# 	id="doubleerin"
-#     base="3[-3].1n.3[-3].x.3[-3].1n"
-# }'''
+test1 = '''{
+	name="Double Erin"
+	id="doubleerin"
+    base="3[-3].1n.3[-3].1n.3[-3].x"
+}'''
 
 # test1 = '''{
 # 	name="Double Evil Erin all places"
@@ -334,11 +334,11 @@ class SpecTransformer(Transformer):
 
 
 # DOUBLE EVIL ERIN MAJOR HERE! THIS ONE!
-test1 = '''{
-	name="Double Evil Erin"
-	id="doubleevilerinallplaces"
-    base="34[-4][-3].1n.3[-3].1n.34[-4][-3].x"
-}'''
+# test1 = '''{
+# 	name="Double Evil Erin"
+# 	id="doubleevilerinallplaces"
+#     base="34[-4][-3].1n.3[-3].1n.34[-4][-3].x"
+# }'''
 
 # this rotates last three bells to right every 4 leads (a bob every lead)
 # test1 = '''{
@@ -409,12 +409,14 @@ if not os.path.isdir(downloads_dir_name):
 	os.makedirs(downloads_dir_name)
 
 # target_stages = range(8, 13, 2)
-target_stages = [8, 10]
+target_stages = [6]
 
 all_filenames = []
 
+download_pdfs = True
 make_merged_pdf = True
-process_all_pn_rotations = False
+process_all_pn_rotations = True
+score_music = True
 
 for s in target_stages:
 	gpn_for_rot = ms.pn(s)
@@ -434,50 +436,60 @@ for s in target_stages:
 		print("Doing rot: ", pn_rotation)
 
 		print("Using pn (after rot): ", gpn_for_rot)
-		allRows = method_gen.generateAllRows(gpn_for_rot, s)
-		pp.pprint(allRows)
 
-		#
-		# rows = method_gen.generateAllRows(gpn_for_rot, s)
-		#
-		# (music_score, music_details) = music.analyseMusic(rows)
-		#
-		#
-		# print("==========================================")
-		# print("---> Music analysis: ")
-		# print("GPN: ", gpn_for_rot)
-		# print("music score: ", music_score)
-		# print("Music details: ", music_details)
-		#
-		# print("")
-		# print("")
-		#
+		music_score = -1
+
+		if score_music:
+			allRows = method_gen.generateAllRows(gpn_for_rot, s)
+			pp.pprint(allRows)
+
+			#
+			rows = method_gen.generateAllRows(gpn_for_rot, s)
+
+			(music_score, music_details) = music.analyseMusic(rows)
+
+
+			print("==========================================")
+			print("---> Music analysis: ")
+			print("GPN: ", gpn_for_rot)
+			print("music score: ", music_score)
+			print("Music details: ", music_details)
+
+			print("")
+			print("")
+
 		# print("URL --> ", url)
 
-		(url, standard_pn_list, title) = ms.gen_link(s, pn_rotation)
+		if download_pdfs:
+			extra_info = None
 
-		if process_all_pn_rotations:
-			title = "%s (pn_rot=%s)" % (title, pn_rotation)
+			if music_score >= 0:
+				extraInfo = "s=%d" % music_score
 
-		file_name = "%s/%s.pdf" % (downloads_dir_name, title)
+			(url, standard_pn_list, title) = ms.gen_link(s, pn_rotation, extraInfo)
 
-		all_filenames.append(file_name)
-		# skip PDFs we have already downloaded
-		if os.path.isfile(file_name):
-			print("Skipping due to existing download: '%s'" % file_name)
-			continue
+			if process_all_pn_rotations:
+				title = "%s (pn_rot=%s)" % (title, pn_rotation)
 
-		print("link: ", url)
+			file_name = "%s/%s.pdf" % (downloads_dir_name, title)
 
-		urllib.request.urlretrieve(url, file_name)
+			all_filenames.append(file_name)
+			# skip PDFs we have already downloaded
+			if os.path.isfile(file_name):
+				print("Skipping due to existing download: '%s'" % file_name)
+				continue
 
-		time.sleep(1)
+			print("link: ", url)
+
+			urllib.request.urlretrieve(url, file_name)
+
+			time.sleep(1)
 
 
 ##################################################
 # make a merged PDF
 
-if make_merged_pdf and len(target_stages) > 1:
+if download_pdfs and make_merged_pdf and (len(target_stages) > 1 or process_all_pn_rotations):
 	all_pdfs_filename = "%s/%s - stages %s.pdf" % (downloads_dir_name, ms.name(), list(target_stages))
 
 	if not os.path.isdir(all_pdfs_filename):
