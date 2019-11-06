@@ -23,3 +23,16 @@ points at 4, 4, 6, 8 (then lightning work where you pass the treble).
 
 From 10th pb: 3, 5, 7, lightning.
 
+
+
+
+Links:
+https://www.whitingsociety.org.uk/articles/non-pal-minor/n-p-plain-minor.html - palindromic methods etc.
+kind of coursing order for double erin: 
+
+from the 8 at back:
+ 
+6421357 (order bells get to back)
+
+bob for 5[-3]  (i.e. 56 on major) instead of usual 3[-3]. (36 on major):
+
