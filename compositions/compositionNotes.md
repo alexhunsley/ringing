@@ -2,7 +2,7 @@
 
 ## Plain Bob Minor
 
-https://bb.ringingworld.co.uk/comp.php?id=2268699
+I called this: https://bb.ringingworld.co.uk/comp.php?id=2268699
 
 ```
 1260 Plain Bob Minor
@@ -13,9 +13,45 @@ The basic part is 4 courses (a 240) which is effectively a H. So it comes round 
 
 So we could ring 6x for a 1440, but that's a bit long; we exchange the final part with a H to get 1260.
 
+Composition from https://sites.google.com/site/timrose2/learning-aids/calling-your-first-quarter-of-plain-bob-minor
+
+## Plain Bob Minor
+
+Attempted this on 2020-03-15 at St Mary's (a bell dropped then treble got on wrong stroke!), called 540 then bit of 720. Got 5/9 the way through whole thing.
+
+Composition: http://www.noyes.org.uk/training/callingplainbobminor.pdf
+
+
+```
+  540 Bob Minor
+ FROM THE TENOR
+
+       W     H
+-----------------
+45236  -     -
+32456  -     S
+34256        S
+-----------------
+
+ Repeat twice 
+
+
+
+  720 Bob Minor
+ FROM THE TENOR
+
+       W      H
+-----------------
+45236  -      -
+34256  -      a
+-----------------
+
+Repeat 5 times, calling Single at “a” in 3rd and 6th parts
+```
+
 ## Cambridge Minor
 
-https://bb.ringingworld.co.uk/comp.php?id=2270571
+Comp: https://bb.ringingworld.co.uk/comp.php?id=2270571
 
 ```
 1296 Cambridge Surprise Minor
