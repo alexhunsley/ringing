@@ -126,39 +126,47 @@ print("")
 #
 #   = n! / (n-r!)r!
 def calcCombos(n, r):
+	print(" =========== factorial: ", n, r)
 	return math.factorial(n) // (math.factorial(n - r) * math.factorial(r))
 
 # print(calcCombos(3, 1))
 
 
-theoreticalMaximumSwapsPoolA = poolAObjectCount // 2 
-theoreticalMaximumSwapsPoolB = poolBObjectCount // 2
+maximumSwapsPoolsA = poolAObjectCount // 2 
+maximumSwapsPoolsB = poolBObjectCount // 2
 
-theoreticalMaximumSwapsEverywhere = theoreticalMaximumSwapsPoolA + theoreticalMaximumSwapsPoolB
-minimumSwapsEverywhere = (totalObjects - maximumPlaces) // 2
+maximumSwapsEverywhere = maximumSwapsPoolsA + maximumSwapsPoolsB
+minimumSwapsEverywhere = max(0, (totalObjects - maximumPlaces) // 2)
 
 
-maximumSwapsPoolsA = min(theoreticalMaximumSwapsPoolA, theoreticalMaximumSwapsEverywhere)
-maximumSwapsPoolsB = min(theoreticalMaximumSwapsPoolB, theoreticalMaximumSwapsEverywhere)
-
-shortfallOfSwapsInPoolB = theoreticalMaximumSwapsEverywhere - theoreticalMaximumSwapsPoolB
-
-minimumSwapsPoolA = max(0, shortfallOfSwapsInPoolB)
-
-print("theoreticalMaximumSwapsEverywhere = ", theoreticalMaximumSwapsEverywhere)
+print("maximumSwapsEverywhere = ", maximumSwapsEverywhere)
 print("minimumSwapsEverywhere = ", minimumSwapsEverywhere, " (to prevent >", maximumPlaces, "places being made)")
 print("")
-print("theoreticalMaximumSwapsPoolA = ", theoreticalMaximumSwapsPoolA)
-print("theoreticalMaximumSwapsPoolB = ", theoreticalMaximumSwapsPoolB)
-print("")
-print("minimumSwapsPoolA = ", minimumSwapsPoolA)
+print("maximumSwapsPoolsA = ", maximumSwapsPoolsA)
+print("maximumSwapsPoolsB = ", maximumSwapsPoolsB)
 
 print("")
 print("")
 
-for swaps in range(minimumSwapsEverywhere, theoreticalMaximumSwapsEverywhere + 1):
+print(" <><><><><><><> have swap ranges: ", minimumSwapsEverywhere, maximumSwapsEverywhere)
+
+totalPossibilities = 0
+
+for swaps in range(minimumSwapsEverywhere, maximumSwapsEverywhere + 1):
 	print('')
 	print("generating", swaps, "swaps:")
+
+	if swaps == 0:
+		print("Skipping 0 swaps, it does nothing")
+		continue
+
+	shortfallOfSwapsInPoolB = swaps - maximumSwapsPoolsB
+
+	minimumSwapsPoolA = max(0, shortfallOfSwapsInPoolB)
+
+	print("")
+	print("shortfallOfSwapsInPoolB = %d, so minimumSwapsPoolA = %d" % (shortfallOfSwapsInPoolB, minimumSwapsPoolA))
+
 	for swapsInA in range(minimumSwapsPoolA, maximumSwapsPoolsA + 1):
 		print("--> doing poolA swaps:", swapsInA)
 		swapsInB = swaps - swapsInA
@@ -179,6 +187,12 @@ for swaps in range(minimumSwapsEverywhere, theoreticalMaximumSwapsEverywhere + 1
 
 		print("A combos = %d_C_%d = %d; " % (reducedPoolSizeA, swapsInA, combosForA), end='')
 		print("B combos = %d_C_%d = %d" % (reducedPoolSizeB, swapsInB, combosForB))
+
+		possibilities = combosForA * combosForB
+		totalPossibilities += possibilities
+		print("->->-> so possibilities for this pair is ", possibilities)
+
 	# swapsWantedInB = 
 
 print("")
+print("TOTAL POSSIBILITIES:", totalPossibilities)
