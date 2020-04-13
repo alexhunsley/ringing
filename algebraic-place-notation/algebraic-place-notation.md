@@ -12,7 +12,7 @@ For example, in GPN you can specify plain bob as being plain hunt plus a 12 lead
 
 In GPN you write down places in much the same way as place notation, with a few additions.
 
-You are allowed to write ```n``` as place - it represents the final place in a row at the current stage. So on minor, ```n``` means 6.
+You are allowed to write ```n``` as place -- it represents the final place in a row at the current stage. So on minor, ```n``` means 6.
 
 Being able to generate methods at any stage is key to GPN, so being able to have place notation that goes to any conceivable number of bells is necessary.
 
