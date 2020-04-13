@@ -89,14 +89,18 @@ import math
 #  (In general, a pool size of N with M swaps size N - M.)
 #
 
-
+# 0, 10 then 1,9 then 2,8 to 6,6: 
+# 92, 41,  67,  55, 60, 58, 59  (then it reverses back to 58 etc. due to symmetry)
+#
+# interesting: less possibilities for odd thing towards centre, but *more* for even thing towards centre.
+#
 
 # while writing this, I'm mentally thinking of a major method,
 # with the treble currently moving in 6-8, hence we have pools
 # of size 4 and 2.
 
-poolAObjectCount = 2
-poolBObjectCount = 4
+poolAObjectCount = 1
+poolBObjectCount = 11
 
 # maximum places we allow in a change.
 # it's unusual to get more than 4.
@@ -196,3 +200,4 @@ for swaps in range(minimumSwapsEverywhere, maximumSwapsEverywhere + 1):
 
 print("")
 print("TOTAL POSSIBILITIES:", totalPossibilities)
+
