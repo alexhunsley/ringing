@@ -99,8 +99,8 @@ import math
 # with the treble currently moving in 6-8, hence we have pools
 # of size 4 and 2.
 
-poolAObjectCount = 1
-poolBObjectCount = 11
+poolAObjectCount = 2
+poolBObjectCount = 8
 
 # maximum places we allow in a change.
 # it's unusual to get more than 4.
@@ -161,7 +161,8 @@ for swaps in range(minimumSwapsEverywhere, maximumSwapsEverywhere + 1):
 	print("generating", swaps, "swaps:")
 
 	if swaps == 0:
-		print("Skipping 0 swaps, it does nothing")
+		print("Skipping 0 swaps, it does nothing, adding 1 possibility")
+		totalPossibilities += 1
 		continue
 
 	shortfallOfSwapsInPoolB = swaps - maximumSwapsPoolsB
