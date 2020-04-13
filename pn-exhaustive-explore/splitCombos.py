@@ -95,8 +95,17 @@ import math
 # with the treble currently moving in 6-8, hence we have pools
 # of size 4 and 2.
 
-poolAObjectCount = 0
-poolBObjectCount = 6
+poolAObjectCount = 2
+poolBObjectCount = 4
+
+# maximum places we allow in a change.
+# it's unusual to get more than 4.
+maximumPlaces = 4
+
+totalCountIncludingTreble = poolAObjectCount + poolBObjectCount + 2
+
+fullChange = '.' * totalCountIncludingTreble
+print(fullChange)
 
 totalObjects = poolAObjectCount + poolBObjectCount
 
@@ -111,9 +120,16 @@ print("Pool A size:", poolAObjectCount)
 print("Pool B size:", poolBObjectCount)
 print("")
 
-# maximum places we allow in a change.
-# it's unusual to get more than 4.
-maximumPlaces = 4
+# print(math.factorial(2))
+
+# the n_C_r function:
+#
+#   = n! / (n-r!)r!
+def calcCombos(n, r):
+	return math.factorial(n) // (math.factorial(n - r) * math.factorial(r))
+
+# print(calcCombos(3, 1))
+
 
 theoreticalMaximumSwapsPoolA = poolAObjectCount // 2 
 theoreticalMaximumSwapsPoolB = poolBObjectCount // 2
@@ -125,7 +141,8 @@ minimumSwapsEverywhere = (totalObjects - maximumPlaces) // 2
 maximumSwapsPoolsA = min(theoreticalMaximumSwapsPoolA, maximumSwapsEverywhere)
 maximumSwapsPoolsB = min(theoreticalMaximumSwapsPoolB, maximumSwapsEverywhere)
 
-shortfallOfSwapsInPoolB = minimumSwapsEverywhere - theoreticalMaximumSwapsPoolB
+# shortfallOfSwapsInPoolB = minimumSwapsEverywhere - theoreticalMaximumSwapsPoolB
+shortfallOfSwapsInPoolB = maximumSwapsEverywhere - theoreticalMaximumSwapsPoolB
 
 minimumSwapsPoolA = max(0, shortfallOfSwapsInPoolB)
 
@@ -141,12 +158,28 @@ print("")
 print("")
 
 for swaps in range(minimumSwapsEverywhere, maximumSwapsEverywhere + 1):
+	print('')
 	print("generating", swaps, "swaps:")
 	for swapsInA in range(minimumSwapsPoolA, maximumSwapsPoolsA + 1):
 		print("--> doing poolA swaps:", swapsInA)
-		swapsNeededInB = swaps - swapsInA
-		print("    --> so need", swapsNeededInB, "swaps in B")
+		swapsInB = swaps - swapsInA
+		print("    --> so need", swapsInB, "swaps in B")
 
+		reducedPoolSizeA = poolAObjectCount - swapsInA
+		reducedPoolSizeB = poolBObjectCount - swapsInB
+
+		changeWithTreble = fullChange[0:reducedPoolSizeA] + '><' + fullChange[0:reducedPoolSizeB]
+
+		# changeWithTreble[poolAObjectCount - 1] = '>'
+		# changeWithTreble[poolAObjectCount] = '<'
+
+		print("%s   " % changeWithTreble, end='')
+
+		combosForA = calcCombos(reducedPoolSizeA, swapsInA)
+		combosForB = calcCombos(reducedPoolSizeB, swapsInB)
+
+		print("A combos = %d_C_%d = %d; " % (reducedPoolSizeA, swapsInA, combosForA), end='')
+		print("B combos = %d_C_%d = %d" % (reducedPoolSizeB, swapsInB, combosForB))
 	# swapsWantedInB = 
 
 print("")
