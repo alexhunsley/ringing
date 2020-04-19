@@ -1,5 +1,17 @@
 ## Change ringing: counting the number of method constructions
 
+https://oeis.org/A051137
+
+Non-reversed and non-rotated.
+
+$$
+T(n, k) = \frac{k^{\lfloor (n+1)/2 \rfloor} + k^{\lceil (n+1)/2 \rceil}} {4} + \frac{ \sum_{d|n} \phi (d) \cdot k^{n/d} } {2n}
+$$
+
+```
+T(n, k) = (k^floor((n+1)/2) + k^ceiling((n+1)/2)) / 4 + (1/2n) * Sum_{d divides n} phi(d) * k^(n/d)
+```
+
 If we want to try to count how many possible methods there are of various types (plain, treble bob, etc) on different stages, we start with a fundamental question: 
 
 *How many distinct place notations are there for a row on stage* n?
@@ -22,7 +34,7 @@ Table: All possible place notations for stage 4
 
 Note that we use `><` to represent two bells crossing: we use two characters because of course two bells are involved. The `|` character represents a bell remaining in place.
 
-This is looking like a combinatorial problem - given $a$ items, choose $b$ of them - but there's a catch here: the `><` occupies two characters, but it represents a single thing conceptually: two bells crossing. To add some clarity, let's rewrite our table, but using `x` instead of `><`:
+This is looking like a combinatorial problem -- given $a$ items, choose $b$ of them -- but there's a catch here: the `><` occupies two characters, but it represents a single thing conceptually: two bells crossing. To add some clarity, let's rewrite our table, but using `x` instead of `><`:
 
 Schematic  Place notation
 ---------  -------------------
@@ -33,11 +45,11 @@ Schematic  Place notation
 `||||`     `1234`
 ---------  -------------------
 
-Table: Altered schematic for all possible PN for stage 4x
+Table: Altered schematic for all possible PN for stage 4
 
-Since the string for each code above contains a single character - `x` or `|` - for each possibility, it's more like an *a choose b* combinatorial problem. But note that we have code strings of varying lengths. 
+Since the string for each code above contains a single character -- "`x`" or "`|`" -- for each possibility, it's more like an *a choose b* combinatorial problem. But note that we have strings of varying lengths. 
 
-With a little thought and you can see that the length of each string is $n$ minus the count of $x$ in the string. And from there we can break this down into $_n\mathrm{C}_r$ expressions for combinations of `x` in the code:
+With a little thought you can see that the length of each string is $n$ minus the count of $x$ in the string. And from there we can break this down into $_n\mathrm{C}_r$ expressions for combinations of `x` in the string:
 
 Code       string length $x$ count Combinations for $x$ occuring
 ---------  ------------- --------- -----------------------------
