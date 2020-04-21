@@ -1,4 +1,28 @@
-## Change ringing: counting the number of method constructions
+# Change ringing: counting the number of method constructions
+
+## Terms
+
+In this article, when we speak of 'method' or 'constructed method', we're referring to place notation which represents a lead (or a six or block etc) of a method.
+
+## Equivelant methods
+
+If we are considering a collection of (generated) methods, we'll find a lot of them to be distinct in terms of place notation but in fact be the same method for all intents and purposes. This is usually because one or more of the following are true:
+
+1. one method has the reverse place notation of the other (example: x.12.34.16 and 16.34.12.x)
+2. one method has place notation which is just a rotation of another (example: x.12.34.16 and 12.34.16.x)
+
+When either (or both) of the above are true for two methods, we say they are *equivalent* methods. We consider them to be duplicates, and we are not interested in seeing duplicates when generating methods.
+
+## Canonical form of a method
+
+In order to help with removing duplicate methods during method generation, it's useful to have a way to convert a method's place notation $M$ to a *canonical form* $C$[^1]. The canonical form meets these conditions:
+
+* $M$ and $C$ are *equivelant*
+* any methods equivalent to $M$ will also have canonical form $C$
+
+[^1]: Algorithmic aside: canonical form is useful because it reduces runtime complexity in comparing methods to each other, e.g. de-duplicating a collection of methods
+
+## rest
 
 divisor function: $\sigma_x(n)=\sum_{d\mid n} d^x$
 
@@ -18,9 +42,9 @@ If we want to try to count how many possible methods there are of various types 
 
 *How many distinct place notations are there for a row on stage* n?
 
-Let's start with an example, a list of all possible place notation[^1] for stage 4:
+Let's start with an example, a list of all possible place notation[^2] for stage 4:
 
-[^1]: We only deal with well-formed place notation in this article. By this we mean that all places made are explicit. For example, on stage 6, these are badly formed: `1` (should be `16`), `134` (should be `1234`).
+[^2]: We only deal with well-formed place notation in this article. By this we mean that all places made are explicit. For example, on stage 6, these are badly formed: `1` (should be `16`), `134` (should be `1234`).
 
 Schematic  Place notation
 ---------  -------------------
@@ -88,7 +112,7 @@ n                0  1  2  3  4  5  6  7  8  9
 ---              -- -- -- -- -- -- -- -- -- --
 $\mathbb{P}(n)$  1  1  2  3  5  8  13 21 34 55
 
-It's the Fibonacci sequence[^2]. So we now have a tidy definition for $\mathbb{P}$:
+It's the Fibonacci sequence[^3]. So we now have a tidy definition for $\mathbb{P}$:
  
 \begin{equation}
 \begin{split}
@@ -98,7 +122,7 @@ It's the Fibonacci sequence[^2]. So we now have a tidy definition for $\mathbb{P
 
 See Appendix A for an aside on Fibonacci in Pascal's Triangle.
 
- [^2]: Proofs are available, e.g. by induction, that the given combinatorial sum in (1) gives the terms in the Fibonacci sequence
+ [^3]: Proofs are available, e.g. by induction, that the given combinatorial sum in (1) gives the terms in the Fibonacci sequence
 
 ## No-constraint method with plain lead length
 
