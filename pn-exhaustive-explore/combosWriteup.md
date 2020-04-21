@@ -1,24 +1,60 @@
 # Change ringing: counting the number of method constructions
 
-## Terms
+## Glossary
 
-In this article, when we speak of 'method' or 'constructed method', we're referring to place notation which represents a lead (or a six or block etc) of a method.
+In this article, by 'method' I'm referring to place notation which represents a lead (or a six or block etc) of a method.
 
 ## Equivelant methods
 
-If we are considering a collection of (generated) methods, we'll find a lot of them to be distinct in terms of place notation but in fact be the same method for all intents and purposes. This is usually because one or more of the following are true:
+If we generate a collection of methods, we'll find that although they're distinct in terms of place notation, a lot of them will be the same method for all intents and purposes. This is usually because one or more of the following are true:
 
 1. one method has the reverse place notation of the other (example: x.12.34.16 and 16.34.12.x)
 2. one method has place notation which is just a rotation of another (example: x.12.34.16 and 12.34.16.x)
 
-When either (or both) of the above are true for two methods, we say they are *equivalent* methods. We consider them to be duplicates, and we are not interested in seeing duplicates when generating methods.
+When either (or both) of the above are true for two methods, we say they are *equivalent* methods. We consider them to be duplicates, and we are usually not interested in seeing duplicates when generating methods.
 
 ## Canonical form of a method
 
-In order to help with removing duplicate methods during method generation, it's useful to have a way to convert a method's place notation $M$ to a *canonical form* $C$[^1]. The canonical form meets these conditions:
+In order to help with removing duplicate methods during method generation, it's useful to have a way to convert a method's place notation $M$ to a *canonical form* of place notation $C$[^1]. The canonical form meets these conditions:
 
 * $M$ and $C$ are *equivelant*
 * any methods equivalent to $M$ will also have canonical form $C$
+
+### Algorithm for finding the canonical form
+
+Suppose we have generated a method Q using $L$ bits of place notation selected from a dictionary $\{p_0, p_1, ... p_{m-1}\}$. 
+
+Our generated method can be written down as a list of indexes into the dictionary, for example: $(0, 2, 0, 7, ...)$.
+
+We can convert such an index list into an integer (call it the 'measure') by considering it to be a string of digits base in L. 
+
+Now, convert *all possible rotations* of our place notation index list, and of its reversal, into measures.
+
+The canonical form of our method is the place notation corresponding to the the largest measure.
+
+Note that you might have a largest measure in several different rotations - that just means the place notation has repeated parts, and you can choose any of the contenders (as they will all be the same place notation).
+
+### Worked example of finding canonical form
+
+Suppose we're considering minimus methods. Our dictionary of place notations on stage 4 is $\{``x", ``12", ``14", ``34"\}$, and the method we want to convert to canonical form is Plain Bob Minimus, with PN being ```x.14.x.14.x.14.x.12```.
+
+We re-write each rotation of our PN and its reversal as a measure:
+
+place notation         as indexes into dictionary    as measure integer
+---------------------  ----------------------------  ------------------
+`x.14.x.14.x.14.x.12`  $(0, 2, 0, 2, 0, 2, 0, 1)$    $02020201_4 = 8737$
+`14.x.14.x.14.x.12.x`  $(2, 0, 2, 0, 2, 0, 1, 0)$    $20202010_4 = 34948$
+`x.14.x.14.x.12.x.14`  $(0, 2, 0, 2, 0, 1, 0, 2)$    $02020102_4 = 8722$
+`14.x.14.x.12.x.14.x`  $(2, 0, 2, 0, 1, 0, 2, 0)$    $20201020_4 = 34888$
+`x.14.x.12.x.14.x.14`  $(0, 2, 0, 1, 0, 2, 0, 2)$    $02010202_4 = 8482$
+`14.x.12.x.14.x.14.x`  $(2, 0, 1, 0, 2, 0, 2, 0)$    $20102020_4 = 33928$
+`x.12.x.14.x.14.x.14`  $(0, 1, 0, 2, 0, 2, 0, 2)$    $01020202_4 = 4642$
+`12.x.14.x.14.x.14.x`  $(1, 0, 2, 0, 2, 0, 2, 0)$    $10202020_4 = 18568$
+
+The largest measure here is 34948, for the second row. Therefore the place notation for that row is the canonical form of this method: `14.x.14.x.14.x.12.x`.
+
+Todo: bit about putting 'x' at end of PN list, so then we get 'x' first in canonical PN.
+
 
 [^1]: Algorithmic aside: canonical form is useful because it reduces runtime complexity in comparing methods to each other, e.g. de-duplicating a collection of methods
 
