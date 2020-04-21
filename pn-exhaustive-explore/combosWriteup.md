@@ -1,11 +1,13 @@
 ## Change ringing: counting the number of method constructions
 
+divisor function: $\sigma_x(n)=\sum_{d\mid n} d^x$
+
 https://oeis.org/A051137
 
 Non-reversed and non-rotated.
 
 $$
-T(n, k) = \frac{k^{\lfloor (n+1)/2 \rfloor} + k^{\lceil (n+1)/2 \rceil}} {4} + \frac{ \sum_{d|n} \phi (d) \cdot k^{n/d} } {2n}
+T(n, k) = \frac{k^{\lfloor (n+1)/2 \rfloor} + k^{\lceil (n+1)/2 \rceil}} {4} + \frac{ \sum_{d\mid n} \phi (d) \cdot k^{n/d} } {2n}
 $$
 
 ```
