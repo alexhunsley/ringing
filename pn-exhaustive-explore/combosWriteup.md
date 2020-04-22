@@ -1,21 +1,62 @@
-# Change ringing: exploring method enumeration
+# Change ringing: exploring the method space
+
+## What is this and who are you
+
+This article takes a look at exploration of all possible methods on various stages, via generation of place notation. In particular, it touches on
+
+* what makes a method desirable or undesirable
+* how many methods are there for various stages and constraints
+* how we can generate methods by enumeration of place notation
+
+We delve into the maths of method enumeration, and identify some of the concepts in mathematics which method enumeration neatly maps onto.
+
+If you're not a ringer or a mathematician, this article might not particularly knead your dough.
 
 ## Glossary
 
-In this article, by 'method' I'm referring to place notation which represents a lead (or a six or block etc) of a method.
+In this article, when I mention 'method' I'm referring to place notation (PN) which represents a lead (or a six or block etc) of a method. I don't address calls or splicing in this article.
+
+The term 'place notation' refers to a string like `x.14.x.16`. There's no standard term for a single row's information inside the PN, so I'll use the term *notate*. So `x`, `14`, and `16` are notates inside the PN `x.14.x.16`.
+
+## Standard place notation
+
+In this article I use only *standard place notation*, by which I mean:
+
+* use only `'x'` to mean 'all swap'
+* every notate is separated by `'.'`, even if you have an `'x'` on one side (so you'd write `'x.16'`, rather than `x16`)
+* every place made for a notate is explicit. So on stage 6, the notate `1` is avoided: we write `16` instead. And on odd stages, you'd never write `'x'`.
+
+## Well-formed methods
+
+When generating methods, if the PN is not *well-formed*, we're not interested in considering it and should discount it as soon as possible.
+
+A method is **not** well-formed for any of these reasons^[And by well-formed I don't mean any higher-level judgements like "this looks like a nice method to ring" or "it is symmetrical" or "it is in the plain bob lead head group" etc.]:
+
+* its PN is repetetive: it is made from a smaller piece of PN repeated one or more times.
+* it contains a notate repeated immediately^[Don't forget to consider the wrap-around point (first and last parts of the PN) when looking for immediately repeated notates]. This makes the method trivially false.
+
+So to illustrate:
+
+Whereas `x.12.x.16` is a well-formed method, `x.14.x.14` is not, since it is `x.14` repeated once.
+
+`x.x.14.18` isn't well formed because it contains an immediate repeat of `x`.
+
+`12.58.x.12` isn't well formed because it contains an immediate repeat of `12` at the wrap-around.
 
 ## Equivelant methods
 
 If we generate a collection of methods, we'll find that although they're distinct in terms of place notation, a lot of them will be the same method for all intents and purposes. This is usually because one or more of the following are true:
 
-1. one method has the reverse place notation of the other (example: x.12.34.16 and 16.34.12.x)
-2. one method has place notation which is just a rotation of another (example: x.12.34.16 and 12.34.16.x)
+1. one method has the reverse place notation of the other (example: `x.12.34.16` and `16.34.12.x`)
+2. one method has place notation which is just a rotation of another (example: `x.12.34.16` and `34.16.x.12`)
 
-When either (or both) of the above are true for two methods, we say they are *equivalent* methods. We consider them to be duplicates, and we are usually not interested in seeing duplicates when generating methods.
+When any of the above are true for two methods, we say they are *equivalent* methods. We consider them to be duplicates of each other, and we are usually not interested in counting duplicates when generating methods. But which of the duplicates do we keep? See the next section.
+
+
 
 ## Canonical form of a method
 
-In order to help with removing duplicate methods during method generation, it's useful to have a way to convert a method's place notation $M$ to a *canonical form*[^1] of place notation $M_c$. We want the canonical form to meet these conditions:
+In order to help with removing duplicate methods during method generation, it's useful to have a way to convert a method's place notation $M$ to a *canonical form*^[Algorithmic aside: canonical form is useful because it reduces runtime complexity in comparing methods to each other, e.g. de-duplicating a collection of methods] of place notation $M_c$. We want the canonical form to meet these conditions:
 
 1. $M$ and $M_c$ are *equivelant* (note: we will see that $M = M_c$ when $M$ is already in canonical form by chance)
 2. any methods equivalent to $M$ will also have canonical form $M_c$
@@ -28,13 +69,11 @@ Our generated method's PN can be written down as a list of indexes into the dict
 
 We can convert such an index list into an integer (call it the 'measure') by considering it to be a string of digits base in L. 
 
-Now, convert *all possible rotations* of our place notation index list and *all possible rotations of its reversal*[^rev] into measures.
+Now, convert *all possible rotations* of our place notation index list and *all possible rotations of its reversal*^[Hint: for methods with traditional half-lead symmetry, reversed place notation is equivelant to the original place notation, so there's no need to do the *all possible rotations of its reversal* part for those methods] into measures.
 
 The canonical form of our method is the place notation corresponding to the the largest measure.
 
-Note that if find a largest measure in several different rotations, the place notation contains repetitions of a shorter, and you can choose any of the contenders (as they will all be the same place notation).
-
-[^rev] hello
+Note that if find a largest measure in more than one rotation, the place notation contains repetition, and so is not well formed.
 
 ### Worked example of finding canonical form
 
@@ -53,12 +92,10 @@ place notation         as indexes into dictionary    as measure integer
 `x.12.x.14.x.14.x.14`  $(0, 1, 0, 2, 0, 2, 0, 2)$    $01020202_4 = 4642$
 `12.x.14.x.14.x.14.x`  $(1, 0, 2, 0, 2, 0, 2, 0)$    $10202020_4 = 18568$
 
-The largest measure here is 34948, for the second row. Therefore the place notation for that row is the canonical form of this method: `14.x.14.x.14.x.12.x`.
+The largest measure here is 34948, in the second row. Therefore the place notation for that row is the canonical form of Plain Bob Minimus: `14.x.14.x.14.x.12.x`.
 
 You might rightly balk at the idea of a method beginning with the treble making a place! Can we make our canonical notation algorithm more palatable? Happily, yes; items towards the end of the place notation dictionary tend to appear at the start of the canonical place notation produced, so we can tweak our PN dictionary to instead be $\{``12", ``14", ``34", ``x"\}$. This results in our canonical PN for Plain Bob Minimus being the usual PN: `x.14.x.14.x.14.x.12`.
 
-
-[^1]: Algorithmic aside: canonical form is useful because it reduces runtime complexity in comparing methods to each other, e.g. de-duplicating a collection of methods
 
 ## rest
 
@@ -80,9 +117,7 @@ If we want to try to count how many possible methods there are of various types 
 
 *How many distinct place notations are there for a row on stage* n?
 
-Let's start with an example, a list of all possible place notation[^2] for stage 4:
-
-[^2]: We only deal with well-formed place notation in this article. By this we mean that all places made are explicit. For example, on stage 6, these are badly formed: `1` (should be `16`), `134` (should be `1234`).
+Let's start with an example, a list of all possible place notation^[We only deal with well-formed place notation in this article. By this we mean that all places made are explicit. For example, on stage 6, these are badly formed: `1` (should be `16`), `134` (should be `1234`).] for stage 4:
 
 Schematic  Place notation
 ---------  -------------------
@@ -150,7 +185,7 @@ n                0  1  2  3  4  5  6  7  8  9
 ---              -- -- -- -- -- -- -- -- -- --
 $\mathbb{P}(n)$  1  1  2  3  5  8  13 21 34 55
 
-It's the Fibonacci sequence[^3]. So we now have a tidy definition for $\mathbb{P}$:
+It's the Fibonacci sequence^[Proofs are available, e.g. by induction, that the given combinatorial sum in (1) gives the terms in the Fibonacci sequence]. So we now have a tidy definition for $\mathbb{P}$:
  
 \begin{equation}
 \begin{split}
@@ -159,8 +194,6 @@ It's the Fibonacci sequence[^3]. So we now have a tidy definition for $\mathbb{P
 \end{equation}
 
 See Appendix A for an aside on Fibonacci in Pascal's Triangle.
-
- [^3]: Proofs are available, e.g. by induction, that the given combinatorial sum in (1) gives the terms in the Fibonacci sequence
 
 ## No-constraint method with plain lead length
 
