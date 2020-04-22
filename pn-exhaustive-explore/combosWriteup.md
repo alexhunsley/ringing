@@ -1,4 +1,4 @@
-# Change ringing: counting the number of method constructions
+# Change ringing: exploring method enumeration
 
 ## Glossary
 
@@ -15,24 +15,26 @@ When either (or both) of the above are true for two methods, we say they are *eq
 
 ## Canonical form of a method
 
-In order to help with removing duplicate methods during method generation, it's useful to have a way to convert a method's place notation $M$ to a *canonical form* of place notation $C$[^1]. The canonical form meets these conditions:
+In order to help with removing duplicate methods during method generation, it's useful to have a way to convert a method's place notation $M$ to a *canonical form*[^1] of place notation $M_c$. We want the canonical form to meet these conditions:
 
-* $M$ and $C$ are *equivelant*
-* any methods equivalent to $M$ will also have canonical form $C$
+1. $M$ and $M_c$ are *equivelant* (note: we will see that $M = M_c$ when $M$ is already in canonical form by chance)
+2. any methods equivalent to $M$ will also have canonical form $M_c$
 
-### Algorithm for finding the canonical form
+### An algorithm for finding the canonical form
 
-Suppose we have generated a method Q using $L$ bits of place notation selected from a dictionary $\{p_0, p_1, ... p_{m-1}\}$. 
+Suppose we have generated a method $Q$ using a list of $m$ place notations selected from a dictionary $\{p_0, p_1, ... p_{m-1}\}$. 
 
-Our generated method can be written down as a list of indexes into the dictionary, for example: $(0, 2, 0, 7, ...)$.
+Our generated method's PN can be written down as a list of indexes into the dictionary, for example: $(0, 2, 0, 7, ...)$.
 
 We can convert such an index list into an integer (call it the 'measure') by considering it to be a string of digits base in L. 
 
-Now, convert *all possible rotations* of our place notation index list, and of its reversal, into measures.
+Now, convert *all possible rotations* of our place notation index list and *all possible rotations of its reversal*[^rev] into measures.
 
 The canonical form of our method is the place notation corresponding to the the largest measure.
 
-Note that you might have a largest measure in several different rotations - that just means the place notation has repeated parts, and you can choose any of the contenders (as they will all be the same place notation).
+Note that if find a largest measure in several different rotations, the place notation contains repetitions of a shorter, and you can choose any of the contenders (as they will all be the same place notation).
+
+[^rev] hello
 
 ### Worked example of finding canonical form
 
@@ -53,7 +55,7 @@ place notation         as indexes into dictionary    as measure integer
 
 The largest measure here is 34948, for the second row. Therefore the place notation for that row is the canonical form of this method: `14.x.14.x.14.x.12.x`.
 
-Todo: bit about putting 'x' at end of PN list, so then we get 'x' first in canonical PN.
+You might rightly balk at the idea of a method beginning with the treble making a place! Can we make our canonical notation algorithm more palatable? Happily, yes; items towards the end of the place notation dictionary tend to appear at the start of the canonical place notation produced, so we can tweak our PN dictionary to instead be $\{``12", ``14", ``34", ``x"\}$. This results in our canonical PN for Plain Bob Minimus being the usual PN: `x.14.x.14.x.14.x.12`.
 
 
 [^1]: Algorithmic aside: canonical form is useful because it reduces runtime complexity in comparing methods to each other, e.g. de-duplicating a collection of methods
