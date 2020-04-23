@@ -14,7 +14,7 @@ If you're not a ringer or a mathematician, this article might not particularly k
 
 ## Glossary
 
-In this article, when I mention 'method' I'm referring to place notation (PN) which represents a lead (or a six or block etc) of a method. I don't address calls or splicing in this article.
+In this article, when I mention 'method' I'm referring to place notation (PN) which represents a lead (or a six or block etc) of a method. I don't address calls or compositions in this article.
 
 The term 'place notation' refers to a string like `x.14.x.16`. There's no standard term for a single row's information inside the PN, so I'll use the term *notate*. So `x`, `14`, and `16` are notates inside the PN `x.14.x.16`.
 
@@ -26,14 +26,18 @@ In this article I use only *standard place notation*, by which I mean:
 * every notate is separated by `'.'`, even if you have an `'x'` on one side (so you'd write `'x.16'`, rather than `x16`)
 * every place made for a notate is explicit. So on stage 6, the notate `1` is avoided: we write `16` instead. And on odd stages, you'd never write `'x'`.
 
+\newpage
+
+# Method in your madness
+
 ## Well-formed methods
 
-When generating methods, if the PN is not *well-formed*, we're not interested in considering it and should discount it as soon as possible.
+When generating methods, if we find some PN is not *well-formed*, we're not interested in considering it and should discount it as soon as possible.
 
-A method is **not** well-formed for any of these reasons^[And by well-formed I don't mean any higher-level judgements like "this looks like a nice method to ring" or "it is symmetrical" or "it is in the plain bob lead head group" etc.]:
+A method's place notation is **not** well-formed for any of these reasons^[And by well-formed I don't mean any higher-level judgements like "this looks like a nice method to ring" or "it is symmetrical" or "it is in the plain bob lead head group" etc.]:
 
-* its PN is repetetive: it is made from a smaller piece of PN repeated one or more times.
-* it contains a notate repeated immediately^[Don't forget to consider the wrap-around point (first and last parts of the PN) when looking for immediately repeated notates]. This makes the method trivially false.
+* its PN is repetitive: it is made from a smaller piece of PN repeated one or more times.
+* it contains a notate repeated immediately^[Don't forget to consider the wrap-around point (first and last parts of the PN) when looking for immediately repeated notates], e.g. `x.x`. This makes the method trivially false.
 
 So to illustrate:
 
@@ -45,7 +49,7 @@ Whereas `x.12.x.16` is a well-formed method, `x.14.x.14` is not, since it is `x.
 
 ## Equivelant methods
 
-If we generate a collection of methods, we'll find that although they're distinct in terms of place notation, a lot of them will be the same method for all intents and purposes. This is usually because one or more of the following are true:
+If we generate all possible methods for some given stage, we'll find that although they're all distinct in terms of place notation, a lot of them will be the same method for all intents and purposes. This is usually because one or more of the following are true:
 
 1. one method has the reverse place notation of the other (example: `x.12.34.16` and `16.34.12.x`)
 2. one method has place notation which is just a rotation of another (example: `x.12.34.16` and `34.16.x.12`)
@@ -58,8 +62,8 @@ When any of the above are true for two methods, we say they are *equivalent* met
 
 In order to help with removing duplicate methods during method generation, it's useful to have a way to convert a method's place notation $M$ to a *canonical form*^[Algorithmic aside: canonical form is useful because it reduces runtime complexity in comparing methods to each other, e.g. de-duplicating a collection of methods] of place notation $M_c$. We want the canonical form to meet these conditions:
 
-1. $M$ and $M_c$ are *equivelant* (note: we will see that $M = M_c$ when $M$ is already in canonical form by chance)
-2. any methods equivalent to $M$ will also have canonical form $M_c$
+1. $M$ and $M_c$ are *equivelant*
+2. any, and only, methods equivalent to $M$ will also have canonical form $M_c$
 
 ### An algorithm for finding the canonical form
 
@@ -73,13 +77,13 @@ Now, convert *all possible rotations* of our place notation index list and *all 
 
 The canonical form of our method is the place notation corresponding to the the largest measure.
 
-Note that if find a largest measure in more than one rotation, the place notation contains repetition, and so is not well formed.
+Note that if we find multiple (equal) largest measures, the place notation is repetitive, and so is not a well formed method.
 
 ### Worked example of finding canonical form
 
 Suppose we're considering minimus methods. Our dictionary of place notations on stage 4 is $\{``x", ``12", ``14", ``34"\}$, and the method we want to convert to canonical form is Plain Bob Minimus, with PN being ```x.14.x.14.x.14.x.12```.
 
-We re-write each rotation of our PN and its reversal as a measure:
+For each rotation of our PN and its reversal, we calculate the measure:
 
 place notation         as indexes into dictionary    as measure integer
 ---------------------  ----------------------------  ------------------
@@ -94,30 +98,18 @@ place notation         as indexes into dictionary    as measure integer
 
 The largest measure here is 34948, in the second row. Therefore the place notation for that row is the canonical form of Plain Bob Minimus: `14.x.14.x.14.x.12.x`.
 
-You might rightly balk at the idea of a method beginning with the treble making a place! Can we make our canonical notation algorithm more palatable? Happily, yes; items towards the end of the place notation dictionary tend to appear at the start of the canonical place notation produced, so we can tweak our PN dictionary to instead be $\{``12", ``14", ``34", ``x"\}$. This results in our canonical PN for Plain Bob Minimus being the usual PN: `x.14.x.14.x.14.x.12`.
+You might rightly balk at the idea of a method beginning with the treble making a place! Canonical form is not there to look pretty, particularly, but if there's an easy way to make it produce more palatable PN, we'll take it.
+Happily, there's an easy way: notice that items towards the end of the place notation dictionary tend to appear at the start of the canonical place notation produced. So we can tweak our PN dictionary to instead be $\{``12", ``14", ``34", ``x"\}$. This results in our canonical PN for Plain Bob Minimus being the usual PN: `x.14.x.14.x.14.x.12`.
 
+\newpage
 
-## rest
-
-divisor function: $\sigma_x(n)=\sum_{d\mid n} d^x$
-
-https://oeis.org/A051137
-
-Non-reversed and non-rotated.
-
-$$
-T(n, k) = \frac{k^{\lfloor (n+1)/2 \rfloor} + k^{\lceil (n+1)/2 \rceil}} {4} + \frac{ \sum_{d\mid n} \phi (d) \cdot k^{n/d} } {2n}
-$$
-
-```
-T(n, k) = (k^floor((n+1)/2) + k^ceiling((n+1)/2)) / 4 + (1/2n) * Sum_{d divides n} phi(d) * k^(n/d)
-```
+## Counting and enumerating possible place notation for a stage
 
 If we want to try to count how many possible methods there are of various types (plain, treble bob, etc) on different stages, we start with a fundamental question: 
 
 *How many distinct place notations are there for a row on stage* n?
 
-Let's start with an example, a list of all possible place notation^[We only deal with well-formed place notation in this article. By this we mean that all places made are explicit. For example, on stage 6, these are badly formed: `1` (should be `16`), `134` (should be `1234`).] for stage 4:
+Let's start with an example, a list of all possible place notation for stage 4:
 
 Schematic  Place notation
 ---------  -------------------
@@ -146,7 +138,7 @@ Schematic  Place notation
 
 Table: Altered schematic for all possible PN for stage 4
 
-Since the string for each code above contains a single character -- "`x`" or "`|`" -- for each possibility, it's more like an *a choose b* combinatorial problem. But note that we have strings of varying lengths. 
+Since the string for each code above contains a single character -- "`x`" or "`|`" -- for each possibility, it's now more amenable to the *a choose b* combinatorial approach. But note that we have strings of varying lengths. 
 
 With a little thought you can see that the length of each string is $n$ minus the count of $x$ in the string. And from there we can break this down into $_n\mathrm{C}_r$ expressions for combinations of `x` in the string:
 
@@ -173,7 +165,7 @@ And for stage 6:
 
 $$\mathbb{P}(6) = {_3\mathrm{C}_3} + {_4\mathrm{C}_2} + {_5\mathrm{C}_1} + {_6\mathrm{C}_0} = 8$$
 
-There's a pretty obvious pattern emerging. The equation for any stage is:
+There's a pattern emerging. The equation for any stage is:
 
 \begin{equation}
 \mathbb{P}(n) = \sum_{i=0}^{\lfloor n/2 \rfloor} {_{n-i}\mathrm{C}_i}
@@ -185,7 +177,7 @@ n                0  1  2  3  4  5  6  7  8  9
 ---              -- -- -- -- -- -- -- -- -- --
 $\mathbb{P}(n)$  1  1  2  3  5  8  13 21 34 55
 
-It's the Fibonacci sequence^[Proofs are available, e.g. by induction, that the given combinatorial sum in (1) gives the terms in the Fibonacci sequence]. So we now have a tidy definition for $\mathbb{P}$:
+It's the Fibonacci sequence^[Proofs are available, e.g. by induction, that the given combinatorial sum in (1) generates the Fibonacci sequence]. So we now have a tidy definition for $\mathbb{P}$:
  
 \begin{equation}
 \begin{split}
@@ -197,7 +189,36 @@ See Appendix A for an aside on Fibonacci in Pascal's Triangle.
 
 ## No-constraint method with plain lead length
 
-This is a method of lead length $2n$ and no other restrictions on content.
+This is a method of lead length $2n$ with no other restrictions (the treble can be doing anything and the transposition at the end of the block can be anything).
+
+If we can choose any possible place notation for each row, we calcalate the number of combinations as $\mathbb{P}_n^{2n}$. However, that allows for immediately repeated notates. If we disallow those, the number of combinations is $(\mathbb{P}_n - 1)^{2n}$
+
+
+Preventing repetetive pn:
+
+if n = 3, we have 6 rows, 3 choices for each  (incl |||).
+
+******
+
+ways to get repeats:
+of len 3:
+
+ABCABC
+
+- so equal to ways of choosing 3 in set way, which dictate the last 3.
+
+
+
+of len 2:
+
+ABABAB
+
+- so equal to ways of choosing 2 in set way, which dictate the last 4.
+
+
+
+
+Say 
 
 ## Plain hunt methods
 
@@ -297,6 +318,22 @@ $\ddot 8 \cdot \dot 7 !$
 $f\!\!f(7)$
 
 $ff(7)$
+
+## rest
+
+divisor function: $\sigma_x(n)=\sum_{d\mid n} d^x$
+
+https://oeis.org/A051137
+
+Non-reversed and non-rotated.
+
+$$
+T(n, k) = \frac{k^{\lfloor (n+1)/2 \rfloor} + k^{\lceil (n+1)/2 \rceil}} {4} + \frac{ \sum_{d\mid n} \phi (d) \cdot k^{n/d} } {2n}
+$$
+
+```
+T(n, k) = (k^floor((n+1)/2) + k^ceiling((n+1)/2)) / 4 + (1/2n) * Sum_{d divides n} phi(d) * k^(n/d)
+```
 
 \newpage
 
