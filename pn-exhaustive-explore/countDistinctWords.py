@@ -161,28 +161,47 @@ def prime_factors(n):
 # print("isRep: ", isRepeatedString("101010"))
 
 # count repetetive strings
-wordLen = 8
-results = []
+wordLen = 12
 
-symbols = "ABCD"
-slen = len(symbols)
+for wordLen in range(0, 30):
+	results = []
 
-calcBruteForceStrings(allowAdjacentLetters = True)
-
-print(results)
-
-totalRepeatingPNs = 0
-
-for res in results:
-	(isRepeat, repeatInfo) = isRepeatedString(res)
-
-	if isRepeat:
-		totalRepeatingPNs += 1
-	print("%s %s" % (res, repeatInfo))
-
-print("\n========== Total repeating PNs:", totalRepeatingPNs)
+	# 12 and "AB" gives 78, but only 76 found in string search!
+	#  -- we are two high because there are 2 lines with 2x and 3x! e.g.:
+	#       ABABABABABAB   6 x 'AB', 3 x 'ABAB', 2 x 'ABABAB'
+	# 12 and "ABC" gives 807, but only 801 found in string search!
+	#
+	# from EOIS, mathematica def is simple: 
+	#   a[0] = 0; a[n_] := 2^n - Sum[MoebiusMu[n/d]*2^d, {d, Divisors[n]}]; Table[a[n], {n, 0, 50}];
+	# so moebiusMu is very relevant here.
+	#
+	symbols = "ABC"
+	slen = len(symbols)
 
 
+	calcBruteForceStrings(allowAdjacentLetters = True)
+
+	# print(results)
+
+	totalRepeatingPNs = 0
+
+	for res in results:
+		(isRepeat, repeatInfo) = isRepeatedString(res)
+
+		if isRepeat:
+			totalRepeatingPNs += 1
+			# print("%s   %s" % (res, repeatInfo))
+
+	print("========== wordLen = %d, total repeating PNs (brute force): %d" % (wordLen, totalRepeatingPNs))
+
+# so when we check OEIS for brute force seq for 2 symbols, which is "0, 0, 2, 2, 4, 2, 10, 2, 16, 8, 34, 2, 76, 2, 130", 
+# we find: 
+#   https://oeis.org/A152061 -- Counts of unique periodic binary strings of length n
+#
+# OEIS doesn't contain anything for 3 symbols, which is seq "0, 0, 3, 3, 9, 3, 33, 3, 81, 27, 249, 3, 801, 3, 2193"
+#
+
+sys.exit(1)
 ### math check
 
 (_, primeFactors, _) = prime_factors(wordLen)
@@ -209,6 +228,7 @@ for pf in uniquePrimeFactors:
 
 	# discount the combos with all same char, which all factors have a repeat at
 	totalWays += numWays - slen
+	print("   (for pf %d   adjusted it down by %d)" % (pf, slen))
 
 # for AA, BB, CC etc where all symbols are the same
 totalWays += slen
@@ -216,7 +236,7 @@ totalWays += slen
 #for the first and last combo (e.g. 0000, 1111)
 # totalWays += 1
 
-print("========== TOTAL WAYS: ", totalWays)
+print("========== TOTAL WAYS (maths): ", totalWays)
 
 
 

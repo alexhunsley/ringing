@@ -1,5 +1,12 @@
 # -*- coding: utf-8 -*-
 import itertools
+import sys
+
+# digits = 6
+# for i in range(0, pow(2, digits)):
+# 	print("{0:b}".format(i).zfill(digits))
+
+# sys.exit(1)
 
 def permutedPartitions(n, I=1):
 	return [*itertools.chain.from_iterable(set(itertools.permutations(p)) for p in partitions(n))]
